@@ -110,3 +110,49 @@ code {
 .react-datepicker-wrapper {
   flex-grow: 1;
 }
+
+/* ===== RTL / Persian support ===== */
+html[dir='rtl'] body {
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Tahoma', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Sidebar flips to the right side in RTL */
+html[dir='rtl'] .sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+html[dir='rtl'] .sidebar .nav-link .feather {
+  margin-right: 0;
+  margin-left: 4px;
+}
+
+/* Toolbar button spacing mirrors in RTL */
+html[dir='rtl'] .button-toolbar > button {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Bootstrap utility mirroring for common margin/padding helpers */
+html[dir='rtl'] .ml-auto {
+  margin-left: unset !important;
+  margin-right: auto !important;
+}
+
+html[dir='rtl'] .mr-auto {
+  margin-right: unset !important;
+  margin-left: auto !important;
+}
+
+/* Numbers stay LTR inside RTL context (dates, IDs, phone numbers) */
+html[dir='rtl'] .ltr-numbers,
+html[dir='rtl'] input[type='number'],
+html[dir='rtl'] input[type='tel'] {
+  direction: ltr;
+  text-align: right;
+}
