@@ -71,4 +71,5 @@ yarn.lock
 .vscode/launch.json
 .vscode/tasks.json
 
-.vercel
+.verceldist/
+node_modules/
