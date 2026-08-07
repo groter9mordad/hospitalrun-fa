@@ -1,5 +1,7 @@
-import { Label, DateTimePicker } from '@hospitalrun/components'
+import { Label } from '@hospitalrun/components'
 import React from 'react'
+
+import LocaleAwareDatePicker from './LocaleAwareDatePicker'
 
 interface Props {
   name: string
@@ -18,24 +20,18 @@ const DateTimePickerWithLabelFormGroup = (props: Props) => {
   return (
     <div className="form-group" data-testid={id}>
       <Label text={label} isRequired={isRequired} htmlFor={id} />
-      <DateTimePicker
-        dateFormat="MM/dd/yyyy h:mm aa"
-        dateFormatCalendar="LLLL yyyy"
-        dropdownMode="scroll"
-        disabled={!isEditable}
-        selected={value}
+      <LocaleAwareDatePicker
+        id={id}
+        value={value}
+        isEditable={isEditable}
         isInvalid={isInvalid}
         feedback={feedback}
+        withTime
         onChange={(inputDate) => {
           if (onChange) {
             onChange(inputDate)
           }
         }}
-        showTimeSelect
-        timeCaption="time"
-        timeFormat="h:mm aa"
-        timeIntervals={15}
-        withPortal={false}
       />
     </div>
   )

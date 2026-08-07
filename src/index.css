@@ -156,3 +156,42 @@ html[dir='rtl'] input[type='tel'] {
   direction: ltr;
   text-align: right;
 }
+/* ── Jalali (Shamsi) date-picker — Persian locale only ── */
+.hr-jalali-datepicker {
+  position: relative;
+  width: 100%;
+}
+
+.hr-jalali-datepicker .rmdp-container {
+  width: 100%;
+  display: block !important;
+}
+
+.hr-jalali-datepicker .rmdp-input {
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+}
+
+.hr-jalali-datepicker .rmdp-input.is-invalid {
+  border-color: #dc3545;
+}
+
+/* The floating calendar itself must render right-to-left with Persian font */
+.rmdp-wrapper,
+.rmdp-calendar {
+  direction: rtl;
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+}
+
+/* Keep the popup calendar above modals/forms */
+.rmdp-container .rmdp-wrapper {
+  z-index: 1060;
+}
