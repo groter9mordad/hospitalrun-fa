@@ -1,5 +1,5 @@
 import { Spinner, Table, Dropdown } from '@hospitalrun/components'
-import format from 'date-fns/format'
+import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router'
 

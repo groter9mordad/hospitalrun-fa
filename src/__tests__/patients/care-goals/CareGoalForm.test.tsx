@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent, { specialChars } from '@testing-library/user-event'
 import addMonths from 'date-fns/addMonths'
-import format from 'date-fns/format'
+import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import CareGoalForm from '../../../patients/care-goals/CareGoalForm'

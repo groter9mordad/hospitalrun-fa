@@ -1,5 +1,5 @@
 import { Select, Label, Button, Table, Container, Row, Column } from '@hospitalrun/components'
-import format from 'date-fns/format'
+import format from '../shared/util/formatDate'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'

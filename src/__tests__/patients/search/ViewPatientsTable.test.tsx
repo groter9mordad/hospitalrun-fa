@@ -1,5 +1,5 @@
 import { screen, render, waitFor } from '@testing-library/react'
-import format from 'date-fns/format'
+import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import PatientSearchRequest from '../../../patients/models/PatientSearchRequest'

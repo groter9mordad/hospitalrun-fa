@@ -1,5 +1,5 @@
 import { Select, Label, Alert, Row, Column } from '@hospitalrun/components'
-import format from 'date-fns/format'
+import format from '../../shared/util/formatDate'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 

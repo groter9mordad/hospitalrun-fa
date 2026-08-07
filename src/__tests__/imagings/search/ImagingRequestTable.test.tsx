@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import format from 'date-fns/format'
+import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import ImagingSearchRequest from '../../../imagings/model/ImagingSearchRequest'

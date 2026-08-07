@@ -1,5 +1,5 @@
 import { Table } from '@hospitalrun/components'
-import format from 'date-fns/format'
+import format from '../../shared/util/formatDate'
 import React from 'react'
 
 import Loading from '../../shared/components/Loading'

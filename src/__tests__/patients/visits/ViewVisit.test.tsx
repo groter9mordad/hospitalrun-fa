@@ -1,5 +1,5 @@
 import { screen, render, waitFor, within } from '@testing-library/react'
-import format from 'date-fns/format'
+import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Route, Router } from 'react-router-dom'

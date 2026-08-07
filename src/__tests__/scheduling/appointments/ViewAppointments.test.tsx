@@ -1,6 +1,6 @@
 import { render, waitFor, screen } from '@testing-library/react'
 import addMinutes from 'date-fns/addMinutes'
-import format from 'date-fns/format'
+import format from '../../../shared/util/formatDate'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { MemoryRouter } from 'react-router-dom'

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from 'date-fns/format'
+import format from '../../shared/util/formatDate'
 import startOfDay from 'date-fns/startOfDay'
 import subYears from 'date-fns/subYears'
 import { createMemoryHistory } from 'history'

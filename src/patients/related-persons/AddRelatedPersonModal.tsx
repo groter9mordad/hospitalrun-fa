@@ -1,5 +1,5 @@
 import { Modal, Alert, Typeahead, Label } from '@hospitalrun/components'
-import format from 'date-fns/format'
+import format from '../../shared/util/formatDate'
 import React, { useState } from 'react'
 
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'

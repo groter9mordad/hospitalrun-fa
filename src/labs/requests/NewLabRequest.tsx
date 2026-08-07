@@ -8,7 +8,7 @@ import {
   Column,
   Row,
 } from '@hospitalrun/components'
-import format from 'date-fns/format'
+import format from '../../shared/util/formatDate'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
