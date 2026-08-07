@@ -1,0 +1,40 @@
+export default {
+  scheduling: {
+    label: 'زمان‌بندی',
+    appointments: {
+      label: 'نوبت‌ها',
+      new: 'نوبت جدید',
+      schedule: 'زمان‌بندی نوبت',
+      editAppointment: 'ویرایش نوبت',
+      createAppointment: 'تعیین نوبت',
+      deleteAppointment: 'حذف نوبت',
+      viewAppointment: 'مشاهده نوبت',
+      updateAppointment: 'به‌روزرسانی نوبت',
+    },
+    appointment: {
+      startDate: 'تاریخ شروع',
+      endDate: 'تاریخ پایان',
+      location: 'محل',
+      type: 'نوع',
+      types: {
+        checkup: 'معاینه',
+        emergency: 'فوری',
+        followUp: 'پیگیری',
+        routine: 'معمول',
+        walkIn: 'مراجعه مستقیم',
+      },
+      errors: {
+        createAppointmentError: 'نتوانستیم نوبت جدید را ایجاد کنیم.',
+        updateAppointmentError: 'نتوانستیم نوبت را به‌روزرسانی کنیم.',
+        patientRequired: 'بیمار الزامی است.',
+        startDateMustBeBeforeEndDate: 'زمان شروع باید قبل از زمان پایان باشد.',
+      },
+      reason: 'دلیل',
+      patient: 'بیمار',
+      deleteConfirmationMessage: 'آیا مطمئن هستید که می‌خواهید این نوبت را حذف کنید؟',
+      successfullyCreated: 'نوبت با موفقیت ایجاد شد.',
+      successfullyDeleted: 'نوبت با موفقیت حذف شد.',
+      successfullyUpdated: 'نوبت با موفقیت به‌روزرسانی شد.',
+    },
+  },
+}

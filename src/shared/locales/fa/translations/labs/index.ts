@@ -1,0 +1,47 @@
+export default {
+  labs: {
+    label: 'آزمایش‌ها',
+    filterTitle: 'فیلتر بر اساس وضعیت',
+    search: 'جستجوی آزمایش‌ها',
+    successfullyUpdated: 'با موفقیت به‌روزرسانی شد',
+    successfullyCompleted: 'با موفقیت تکمیل شد',
+    successfullyCreated: 'با موفقیت ایجاد شد',
+    successfullyDeletedNote: 'یادداشت حذف شد',
+    status: {
+      requested: 'درخواست‌شده',
+      completed: 'تکمیل‌شده',
+      canceled: 'لغو‌شده',
+    },
+    filter: {
+      all: 'همه وضعیت‌ها',
+    },
+    requests: {
+      label: 'درخواست آزمایش‌ها',
+      new: 'درخواست آزمایش',
+      save: 'درخواست',
+      view: 'مشاهده آزمایش',
+      cancel: 'لغو آزمایش',
+      complete: 'تکمیل آزمایش',
+      update: 'به‌روزرسانی آزمایش',
+      error: {
+        unableToRequest: 'نتوانستیم درخواست آزمایش جدید را ایجاد کنیم.',
+        unableToComplete: 'نتوانستیم درخواست آزمایش را تکمیل کنیم.',
+        typeRequired: 'نوع الزامی است.',
+        patientRequired: 'بیمار الزامی است.',
+        resultRequiredToComplete: 'نتیجه برای تکمیل الزامی است.',
+      },
+    },
+    lab: {
+      code: 'کد آزمایش',
+      status: 'وضعیت',
+      for: 'برای',
+      type: 'نوع',
+      result: 'نتیجه',
+      notes: 'یادداشت‌ها',
+      requestedOn: 'درخواست‌شده در',
+      completedOn: 'تکمیل‌شده در',
+      canceledOn: 'لغو‌شده در',
+      patient: 'بیمار',
+    },
+  },
+}

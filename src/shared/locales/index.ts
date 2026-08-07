@@ -1,6 +1,7 @@
 import translationAR from './ar/translations'
 import translationDE from './de/translations'
 import translationEnUs from './enUs/translations'
+import translationFA from './fa/translations'
 import translationES from './es/translations'
 import translationFR from './fr/translations'
 import translationID from './id/translations'
@@ -27,6 +28,10 @@ const resources: { [language: string]: any } = {
   en: {
     name: 'English, American',
     translation: translationEnUs,
+  },
+  fa: {
+    name: 'فارسی',
+    translation: translationFA,
   },
   es: {
     name: 'Spanish',

@@ -1,0 +1,21 @@
+export default {
+  actions: {
+    label: 'عملیات',
+    edit: 'ویرایش',
+    save: 'ذخیره',
+    update: 'به‌روزرسانی',
+    complete: 'تکمیل',
+    delete: 'حذف',
+    cancel: 'لغو',
+    new: 'جدید',
+    list: 'فهرست',
+    search: 'جستجو',
+    confirmDelete: 'تأیید حذف',
+    next: 'بعدی',
+    previous: 'قبلی',
+    page: 'صفحه',
+    add: 'افزودن',
+    view: 'مشاهده',
+    logout: 'خروج',
+  },
+}
