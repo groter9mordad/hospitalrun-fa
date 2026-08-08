@@ -50,17 +50,17 @@ const CarePlanForm = (props: Props) => {
     patient.diagnoses?.map((d) => ({ label: d.name, value: d.id })) || []
 
   const statusOptions: SelectOption[] = Object.values(CarePlanStatus).map((v) => ({
-    label: v,
+    label: t(`patient.carePlan.statusOptions.${v}`),
     value: v,
   }))
 
   const intentOptions: SelectOption[] = Object.values(CarePlanIntent).map((v) => ({
-    label: v,
+    label: t(`patient.carePlan.intentOptions.${v}`),
     value: v,
   }))
 
   return (
-    <form aria-label="form">
+    <form aria-label="فرم برنامه مراقبتی">
       {carePlanError?.message && <Alert color="danger" message={t(carePlanError.message)} />}
       <Row>
         <Column sm={12}>
@@ -97,7 +97,7 @@ const CarePlanForm = (props: Props) => {
             <Label
               text={t('patient.carePlan.condition')}
               htmlFor="conditionSelect"
-              title="This is a required input"
+              title="این فیلد الزامی است"
               isRequired
             />
             <Select
@@ -120,7 +120,7 @@ const CarePlanForm = (props: Props) => {
             <Label
               text={t('patient.carePlan.status')}
               htmlFor="statusSelect"
-              title="This is a required input"
+              title="این فیلد الزامی است"
               isRequired
             />
             <Select
@@ -141,7 +141,7 @@ const CarePlanForm = (props: Props) => {
             <Label
               text={t('patient.carePlan.intent')}
               htmlFor="intentSelect"
-              title="This is a required input"
+              title="این فیلد الزامی است"
               isRequired
             />
             <Select

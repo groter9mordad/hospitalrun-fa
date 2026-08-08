@@ -1,11 +1,9 @@
 /**
- * Locale-aware date formatting.
+ * Persian-only Jalali (Shamsi) date formatting.
  *
- * When the active i18n language is Persian (fa), dates are formatted using the
- * Jalali (Shamsi) calendar via date-fns-jalali with the Persian (fa-jalali-IR)
- * locale, and the resulting Latin digits are converted to Persian digits
- * (۰۱۲۳۴۵۶۷۸۹). For every other language the standard Gregorian date-fns
- * formatter is used.
+ * Every user-visible date is formatted with the Persian calendar and Persian
+ * digits. ISO/Gregorian timestamps remain unchanged only at the data/API
+ * boundary so that persisted records stay compatible with HospitalRun.
  *
  * Two exports are provided:
  *   - default `format(date, formatStr, options)` — drop-in replacement for
@@ -15,13 +13,8 @@
  */
 import jalaliFormat from 'date-fns-jalali/format'
 import faJalaliLocale from 'date-fns-jalali/locale/fa-jalali-IR'
-import gregorianFormat from 'date-fns/format'
 
-import i18n from '../config/i18n'
-
-type FormatOptions = Parameters<typeof gregorianFormat>[2]
-
-const isPersian = (): boolean => (i18n.language || 'en').split('-')[0] === 'fa'
+type FormatOptions = Parameters<typeof jalaliFormat>[2]
 
 // Map Latin (ASCII) digits to Persian digits.
 const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
@@ -34,14 +27,11 @@ export default function format(
   formatStr: string,
   options?: FormatOptions,
 ): string {
-  if (isPersian()) {
-    const formatted = jalaliFormat(date, formatStr, {
-      locale: faJalaliLocale,
-      ...options,
-    })
-    return toPersianDigits(formatted)
-  }
-  return gregorianFormat(date, formatStr, options)
+  const formatted = jalaliFormat(date, formatStr, {
+    locale: faJalaliLocale,
+    ...options,
+  })
+  return toPersianDigits(formatted)
 }
 
 export const formatDate = (date?: string | Date): string => {

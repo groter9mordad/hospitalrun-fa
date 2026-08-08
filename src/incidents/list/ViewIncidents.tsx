@@ -46,7 +46,7 @@ const ViewIncidents = () => {
     <Container>
       <Row>
         <Column md={3} lg={2}>
-          <Label text={t('incidents.filterTitle')} title="type" />
+          <Label text={t('incidents.filterTitle')} title={t('incidents.filterTitle')} />
           <Select
             id="type"
             options={filterOptions}

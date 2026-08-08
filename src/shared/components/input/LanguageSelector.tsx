@@ -11,7 +11,7 @@ const LanguageSelector = () => {
 
   return (
     <>
-      <Label text={t('settings.language.label')} title="language" />
+      <Label text={t('settings.language.label')} title={t('settings.language.label')} />
       <Select id="language" options={languageOptions} defaultSelected={languageOptions} disabled />
     </>
   )

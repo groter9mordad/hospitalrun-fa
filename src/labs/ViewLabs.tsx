@@ -1,5 +1,4 @@
 import { Select, Label, Button, Table, Container, Row, Column } from '@hospitalrun/components'
-import format from '../shared/util/formatDate'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -13,6 +12,7 @@ import useTranslator from '../shared/hooks/useTranslator'
 import Lab from '../shared/model/Lab'
 import Permissions from '../shared/model/Permissions'
 import { RootState } from '../shared/store'
+import format from '../shared/util/formatDate'
 import useLabsSearch from './hooks/useLabsSearch'
 import { LabFilter } from './model/LabSearchRequest'
 
@@ -79,7 +79,7 @@ const ViewLabs = () => {
     <Container>
       <Row>
         <Column md={3} lg={2}>
-          <Label title="type" text={t('labs.filterTitle')} />
+          <Label title={t('labs.filterTitle')} text={t('labs.filterTitle')} />
           <Select
             id="type"
             options={filterOptions}

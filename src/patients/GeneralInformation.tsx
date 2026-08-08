@@ -139,7 +139,7 @@ const GeneralInformation = (props: Props): ReactElement => {
         <div className="row">
           <div className="col">
             <div className="form-group" data-testid="sexSelect">
-              <Label text={t('patient.sex')} title="sex" />
+              <Label text={t('patient.sex')} title={t('patient.sex')} />
               <Select
                 id="sexSelect"
                 options={sexOptions}
@@ -151,7 +151,7 @@ const GeneralInformation = (props: Props): ReactElement => {
           </div>
           <div className="col">
             <div className="form-group" data-testid="typeSelect">
-              <Label text={t('patient.type')} title="type" />
+              <Label text={t('patient.type')} title={t('patient.type')} />
               <Select
                 id="typeSelect"
                 options={typeOptions}
@@ -163,7 +163,7 @@ const GeneralInformation = (props: Props): ReactElement => {
           </div>
           <div className="col">
             <div className="form-group" data-testid="bloodTypeSelect">
-              <Label text={t('patient.bloodType')} title="bloodType" />
+              <Label text={t('patient.bloodType')} title={t('patient.bloodType')} />
               <Select
                 id="bloodTypeSelect"
                 options={bloodTypeOptions}

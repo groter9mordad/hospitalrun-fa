@@ -82,7 +82,7 @@ const ReportIncident = () => {
   }
 
   return (
-    <form aria-label="Report Incident form">
+    <form aria-label="فرم گزارش رخداد">
       <Row>
         <Column md={6}>
           <DateTimePickerWithLabelFormGroup

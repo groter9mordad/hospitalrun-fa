@@ -129,7 +129,7 @@ const NewMedicationRequest = () => {
       {status === 'error' && (
         <Alert color="danger" title={t('states.error')} message={t(error.message || '')} />
       )}
-      <form aria-label="Medication Request form">
+      <form aria-label="فرم درخواست دارو">
         <div className="form-group patient-typeahead">
           <Label htmlFor="patientTypeahead" isRequired text={t('medications.medication.patient')} />
           <Typeahead
@@ -153,7 +153,11 @@ const NewMedicationRequest = () => {
           onChange={onMedicationChange}
         />
         <div className="form-group" data-testid="statusSelect">
-          <Label text={t('medications.medication.status')} title="status" isRequired />
+          <Label
+            text={t('medications.medication.status')}
+            title={t('medications.medication.status')}
+            isRequired
+          />
           <Select
             id="statusSelect"
             options={statusOptionsNew}
@@ -165,7 +169,11 @@ const NewMedicationRequest = () => {
           />
         </div>
         <div className="form-group" data-testid="intentSelect">
-          <Label text={t('medications.medication.intent')} title="intent" isRequired />
+          <Label
+            text={t('medications.medication.intent')}
+            title={t('medications.medication.intent')}
+            isRequired
+          />
           <Select
             id="intentSelect"
             options={intentOptions}
@@ -177,7 +185,11 @@ const NewMedicationRequest = () => {
           />
         </div>
         <div className="form-group" data-testid="prioritySelect">
-          <Label text={t('medications.medication.priority')} title="priority" isRequired />
+          <Label
+            text={t('medications.medication.priority')}
+            title={t('medications.medication.priority')}
+            isRequired
+          />
           <Select
             id="prioritySelect"
             options={priorityOptions}

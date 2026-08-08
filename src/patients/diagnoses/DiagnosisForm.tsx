@@ -56,12 +56,12 @@ const DiagnosisForm = (props: Props) => {
   }
 
   const statusOptions: SelectOption[] = Object.values(DiagnosisStatus).map((v) => ({
-    label: v,
+    label: t(`patient.diagnoses.statusOptions.${v}`),
     value: v,
   }))
 
   return (
-    <form aria-label="form">
+    <form aria-label="فرم تشخیص">
       {diagnosisError && (
         <Alert
           color="danger"
@@ -133,7 +133,7 @@ const DiagnosisForm = (props: Props) => {
       <Row>
         <Column md={12}>
           <div className="form-group" data-testid="visitSelect">
-            <Label title="visit" text={t('patient.diagnoses.visit')} />
+            <Label title={t('patient.diagnoses.visit')} text={t('patient.diagnoses.visit')} />
             <Select
               id="visitSelect"
               options={patientVisits || []}
@@ -153,7 +153,7 @@ const DiagnosisForm = (props: Props) => {
             <Label
               text={t('patient.diagnoses.status')}
               htmlFor="statusSelect"
-              title="This is a required input"
+              title="این فیلد الزامی است"
               isRequired
             />
             <Select

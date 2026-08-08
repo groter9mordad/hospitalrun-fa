@@ -42,10 +42,13 @@ const VisitForm = (props: Props) => {
   }
 
   const statusOptions: SelectOption[] =
-    Object.values(VisitStatus).map((v) => ({ label: v, value: v })) || []
+    Object.values(VisitStatus).map((v) => ({
+      label: t(`patient.visits.statusOptions.${v}`),
+      value: v,
+    })) || []
 
   return (
-    <form aria-label="visit form">
+    <form aria-label="فرم مراجعه">
       {visitError?.message && <Alert color="danger" message={t(visitError.message)} />}
       <Row>
         <Column sm={6}>
@@ -89,7 +92,7 @@ const VisitForm = (props: Props) => {
       </Row>
       <Row>
         <Column sm={12}>
-          <Label text={t('patient.visits.status')} title="status" isRequired />
+          <Label text={t('patient.visits.status')} title={t('patient.visits.status')} isRequired />
           <Select
             id="status"
             options={statusOptions}

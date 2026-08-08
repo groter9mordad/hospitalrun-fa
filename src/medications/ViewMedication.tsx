@@ -224,7 +224,11 @@ const ViewMedication = () => {
         <div className="border-bottom" />
         <Row>
           <Column>
-            <Label title="status" text={t('medications.medication.status')} isRequired />
+            <Label
+              title={t('medications.medication.status')}
+              text={t('medications.medication.status')}
+              isRequired
+            />
             <Select
               id="status"
               options={statusOptionsEdit}
@@ -233,7 +237,11 @@ const ViewMedication = () => {
             />
           </Column>
           <Column>
-            <Label title="intent" text={t('medications.medication.intent')} isRequired />
+            <Label
+              title={t('medications.medication.intent')}
+              text={t('medications.medication.intent')}
+              isRequired
+            />
             <Select
               id="intent"
               options={intentOptions}
@@ -242,7 +250,11 @@ const ViewMedication = () => {
             />
           </Column>
           <Column>
-            <Label title="priority" text={t('medications.medication.priority')} isRequired />
+            <Label
+              title={t('medications.medication.priority')}
+              text={t('medications.medication.priority')}
+              isRequired
+            />
             <Select
               id="priority"
               options={priorityOptions}

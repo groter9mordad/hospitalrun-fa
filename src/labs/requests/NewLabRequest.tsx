@@ -163,7 +163,7 @@ const NewLabRequest = () => {
           </Column>
           <Column>
             <div className="form-group" data-testid="visitSelect">
-              <Label text={t('patient.visit')} title="This is a required input" isRequired />
+              <Label text={t('patient.visit')} title="این فیلد الزامی است" isRequired />
               <Select
                 id="visit"
                 options={visitOptions || []}

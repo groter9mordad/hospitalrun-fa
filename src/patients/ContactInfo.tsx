@@ -132,7 +132,7 @@ const ContactInfo = (props: Props): ReactElement => {
     return (
       <Spinner
         aria-hidden="false"
-        aria-label="Loading"
+        aria-label="در حال بارگذاری"
         color="blue"
         loading
         size={20}

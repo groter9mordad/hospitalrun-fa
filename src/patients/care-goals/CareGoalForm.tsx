@@ -40,13 +40,13 @@ const CareGoalForm = (props: Props) => {
   ]
 
   const statusOptions: SelectOption[] = Object.values(CareGoalStatus).map((v) => ({
-    label: v,
+    label: t(`patient.careGoal.statusOptions.${v}`),
     value: v,
   }))
 
   const achievementsStatusOptions: SelectOption[] = Object.values(CareGoalAchievementStatus).map(
     (v) => ({
-      label: v,
+      label: t(`patient.careGoal.achievementStatusOptions.${v}`),
       value: v,
     }),
   )
@@ -72,7 +72,7 @@ const CareGoalForm = (props: Props) => {
   }
 
   return (
-    <form aria-label="care-goal-form">
+    <form aria-label="فرم هدف مراقبتی">
       {careGoalError?.message && <Alert color="danger" message={t(careGoalError.message)} />}
       <Row>
         <Column sm={12}>
@@ -92,7 +92,7 @@ const CareGoalForm = (props: Props) => {
         <Column sm={12}>
           <div className="form-group" data-testid="prioritySelect">
             <Label
-              title="This is a required input"
+              title="این فیلد الزامی است"
               text={t('patient.careGoal.priority.label')}
               htmlFor="prioritySelect"
               isRequired
@@ -112,7 +112,7 @@ const CareGoalForm = (props: Props) => {
         <Column sm={6}>
           <div className="form-group" data-testid="statusSelect">
             <Label
-              title="This is a required input"
+              title="این فیلد الزامی است"
               text={t('patient.careGoal.status')}
               htmlFor="statusSelect"
               isRequired
@@ -133,7 +133,7 @@ const CareGoalForm = (props: Props) => {
         <Column sm={6}>
           <div className="form-group" data-testid="achievementStatusSelect">
             <Label
-              title="This is a required input"
+              title="این فیلد الزامی است"
               text={t('patient.careGoal.achievementStatus')}
               htmlFor="achievementStatusSelect"
               isRequired

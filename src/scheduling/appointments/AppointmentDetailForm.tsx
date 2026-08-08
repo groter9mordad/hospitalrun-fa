@@ -114,7 +114,10 @@ const AppointmentDetailForm = (props: Props) => {
       <div className="row">
         <div className="col">
           <div className="form-group" data-testid="typeSelect">
-            <Label text={t('scheduling.appointment.type')} title="type" />
+            <Label
+              text={t('scheduling.appointment.type')}
+              title={t('scheduling.appointment.type')}
+            />
             <Select
               id="type"
               options={typeOptions}

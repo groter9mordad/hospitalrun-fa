@@ -44,7 +44,7 @@ const MedicationRequestSearch = (props: Props) => {
   return (
     <Row>
       <Column md={3} lg={2}>
-        <Label title="filterStatus" text={t('medications.filterTitle')} />
+        <Label title={t('medications.filterTitle')} text={t('medications.filterTitle')} />
         <Select
           id="filterStatus"
           options={filterOptions}

@@ -102,7 +102,7 @@ const NewAppointment = () => {
 
   return (
     <div>
-      <form aria-label="new appointment form">
+      <form aria-label="فرم نوبت جدید">
         <AppointmentDetailForm
           appointment={newAppointment as Appointment}
           patient={patient as Patient}

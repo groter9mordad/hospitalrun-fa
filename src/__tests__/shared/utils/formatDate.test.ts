@@ -2,12 +2,12 @@ import { formatDate } from '../../../shared/util/formatDate'
 
 it('should format a valid date provided as a string', () => {
   const formattedDate = formatDate('2020-10-25T12:54:15.353Z')
-  expect(formattedDate).toEqual('10/25/2020')
+  expect(formattedDate).toEqual('۱۳۹۹/۰۸/۰۴')
 })
 
 it('should format a valid date provided as a Date object', () => {
   const formattedDate = formatDate(new Date('2020-10-25T12:54:15.353Z'))
-  expect(formattedDate).toEqual('10/25/2020')
+  expect(formattedDate).toEqual('۱۳۹۹/۰۸/۰۴')
 })
 
 it('should return "" when passed undefined', () => {
