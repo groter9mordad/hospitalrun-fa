@@ -1,0 +1,10 @@
+appId: com.runcdx.hospital
+productName: RunCDX Hospital
+directories:
+  output: dist-installer
+win:
+  target:
+    - nsis
+nsis:
+  oneClick: true
+  perMachine: false

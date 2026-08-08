@@ -37,7 +37,7 @@ jobs:
 
       - name: Build NSIS installer
         shell: pwsh
-        run: npx electron-builder@24.13.3 --win nsis --x64 --prepackaged dist-electron/runcdx-win32-x64 -c.appId=com.runcdx.hospital -c.productName="RunCDX Hospital" -c.directories.output=dist-installer
+        run: npx electron-builder@24.13.3 --win nsis --x64 --prepackaged dist-electron/runcdx-win32-x64
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
