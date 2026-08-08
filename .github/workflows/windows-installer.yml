@@ -1,0 +1,50 @@
+name: Build Persian Windows Installer
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/windows-installer.yml
+  workflow_dispatch:
+
+jobs:
+  windows-installer:
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16.20.2
+          cache: npm
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          npm install --legacy-peer-deps --no-package-lock --ignore-scripts
+          npm install --no-save --legacy-peer-deps --ignore-scripts @types/lodash@4.14.178 @types/ms@0.7.31 @types/react@17.0.0 @types/react-dom@17.0.0 @types/react-router@5.1.2 @types/react-router-dom@5.3.0 @types/node@17.0.0
+          npm rebuild node-sass
+
+      - name: Build Persian Jalali frontend
+        run: npm run build
+
+      - name: Package Windows application
+        shell: pwsh
+        run: npx electron-packager . runcdx --platform=win32 --arch=x64 --electron-version=22.3.27 --out=dist-electron --overwrite --asar --prune=true
+
+      - name: Build NSIS installer
+        shell: pwsh
+        run: npx electron-builder@24.13.3 --win nsis --x64 --prepackaged dist-electron/runcdx-win32-x64 -c.appId=com.runcdx.hospital -c.productName="RunCDX Hospital" -c.directories.output=dist-installer
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: runcdx-windows-installer
+          path: dist-installer/*.exe
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
