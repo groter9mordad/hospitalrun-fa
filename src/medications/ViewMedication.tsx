@@ -1,5 +1,4 @@
 import { Select, Row, Column, Badge, Button, Alert, Label } from '@hospitalrun/components'
-import format from '../shared/util/formatDate'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
@@ -14,6 +13,7 @@ import Medication from '../shared/model/Medication'
 import Patient from '../shared/model/Patient'
 import Permissions from '../shared/model/Permissions'
 import { RootState } from '../shared/store'
+import format from '../shared/util/formatDate'
 import { cancelMedication, updateMedication, fetchMedication } from './medication-slice'
 
 const getTitle = (patient: Patient | undefined, medication: Medication | undefined) =>
@@ -303,7 +303,7 @@ const ViewMedication = () => {
       </>
     )
   }
-  return <h1>Loading...</h1>
+  return <h1>در حال بارگذاری...</h1>
 }
 
 export default ViewMedication

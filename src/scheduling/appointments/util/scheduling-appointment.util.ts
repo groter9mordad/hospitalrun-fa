@@ -1,16 +1,5 @@
 import Appointment from '../../../shared/model/Appointment'
-
-const options = {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-}
-
-function toLocaleString(date: Date) {
-  return date.toLocaleString([], options)
-}
+import format from '../../../shared/util/formatDate'
 
 export function getAppointmentLabel(appointment: Appointment | undefined) {
   if (!appointment) {
@@ -20,6 +9,9 @@ export function getAppointmentLabel(appointment: Appointment | undefined) {
   const { id, startDateTime, endDateTime } = appointment
 
   return startDateTime && endDateTime
-    ? `${toLocaleString(new Date(startDateTime))} - ${toLocaleString(new Date(endDateTime))}`
+    ? `${format(new Date(startDateTime), 'yyyy/MM/dd HH:mm')} - ${format(
+        new Date(endDateTime),
+        'yyyy/MM/dd HH:mm',
+      )}`
     : id
 }

@@ -1,4 +1,4 @@
-import { Calendar, Button } from '@hospitalrun/components'
+import { Button } from '@hospitalrun/components'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import PatientRepository from '../../shared/db/PatientRepository'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Appointment from '../../shared/model/Appointment'
 import useAppointments from '../hooks/useAppointments'
+import JalaliAppointmentCalendar from './JalaliAppointmentCalendar'
 
 interface Event {
   id: string
@@ -78,7 +79,7 @@ const ViewAppointments = () => {
 
   return (
     <div>
-      <Calendar
+      <JalaliAppointmentCalendar
         events={events}
         onEventClick={(event) => {
           history.push(`/appointments/${event.id}`)

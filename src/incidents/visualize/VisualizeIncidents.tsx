@@ -1,4 +1,5 @@
 import { LineGraph, Spinner } from '@hospitalrun/components'
+import getMonth from 'date-fns-jalali/getMonth'
 import React, { useEffect, useState } from 'react'
 
 import { useUpdateTitle } from '../../page-header/title/TitleContext'
@@ -20,9 +21,22 @@ const VisualizeIncidents = () => {
   const [showGraph, setShowGraph] = useState(false)
   const [monthlyIncidents, setMonthlyIncidents] = useState(Array(12).fill(0))
 
-  const getIncidentMonth = (reportedOn: string) =>
-    // reportedOn: "2020-08-12T19:53:30.153Z"
-    Number(reportedOn.slice(5, 7)) - 1
+  const getIncidentMonth = (reportedOn: string) => getMonth(new Date(reportedOn))
+
+  const persianMonths = [
+    'فروردین',
+    'اردیبهشت',
+    'خرداد',
+    'تیر',
+    'مرداد',
+    'شهریور',
+    'مهر',
+    'آبان',
+    'آذر',
+    'دی',
+    'بهمن',
+    'اسفند',
+  ]
 
   useEffect(() => {
     if (data === undefined || isLoading) {
@@ -53,67 +67,67 @@ const VisualizeIncidents = () => {
             borderColor: 'black',
             data: [
               {
-                x: 'January',
+                x: persianMonths[0],
                 y: monthlyIncidents[0],
               },
               {
-                x: 'February',
+                x: persianMonths[1],
                 y: monthlyIncidents[1],
               },
               {
-                x: 'March',
+                x: persianMonths[2],
                 y: monthlyIncidents[2],
               },
               {
-                x: 'April',
+                x: persianMonths[3],
                 y: monthlyIncidents[3],
               },
               {
-                x: 'May',
+                x: persianMonths[4],
                 y: monthlyIncidents[4],
               },
               {
-                x: 'June',
+                x: persianMonths[5],
                 y: monthlyIncidents[5],
               },
               {
-                x: 'July',
+                x: persianMonths[6],
                 y: monthlyIncidents[6],
               },
               {
-                x: 'August',
+                x: persianMonths[7],
                 y: monthlyIncidents[7],
               },
               {
-                x: 'September',
+                x: persianMonths[8],
                 y: monthlyIncidents[8],
               },
               {
-                x: 'October',
+                x: persianMonths[9],
                 y: monthlyIncidents[9],
               },
               {
-                x: 'November',
+                x: persianMonths[10],
                 y: monthlyIncidents[10],
               },
               {
-                x: 'December',
+                x: persianMonths[11],
                 y: monthlyIncidents[11],
               },
             ],
-            label: 'Incidents',
+            label: 'حوادث',
           },
         ]}
-        title="Reported Incidents Overtime"
+        title="حوادث گزارش‌شده در گذر زمان"
         xAxes={[
           {
-            label: 'Months',
+            label: 'ماه‌های شمسی',
             type: 'category',
           },
         ]}
         yAxes={[
           {
-            label: 'Numbers',
+            label: 'تعداد',
             type: 'linear',
           },
         ]}

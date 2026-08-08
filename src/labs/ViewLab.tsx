@@ -1,5 +1,4 @@
 import { Row, Column, Badge, Button, Alert, Toast, Callout, Label } from '@hospitalrun/components'
-import format from '../shared/util/formatDate'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
@@ -13,6 +12,7 @@ import Lab from '../shared/model/Lab'
 import Patient from '../shared/model/Patient'
 import Permissions from '../shared/model/Permissions'
 import { RootState } from '../shared/store'
+import format from '../shared/util/formatDate'
 import { uuid } from '../shared/util/uuid'
 import useCancelLab from './hooks/useCancelLab'
 import useCompleteLab from './hooks/useCompleteLab'
@@ -220,7 +220,7 @@ const ViewLab = () => {
                 <p data-testid="note">{note.text}</p>
                 {labToView.status === 'requested' && (
                   <Button icon="remove" onClick={async () => deleteNote(note.id)} color="danger">
-                    <span data-testid={`delete-note-${note.id}`}>Delete</span>
+                    <span data-testid={`delete-note-${note.id}`}>{t('actions.delete')}</span>
                   </Button>
                 )}
               </div>
@@ -295,7 +295,7 @@ const ViewLab = () => {
       </>
     )
   }
-  return <h1>Loading...</h1>
+  return <h1>در حال بارگذاری...</h1>
 }
 
 export default ViewLab

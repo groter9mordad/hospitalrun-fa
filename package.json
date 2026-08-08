@@ -31,6 +31,7 @@
     "react-bootstrap": "~1.6.0",
     "react-bootstrap-typeahead": "~5.2.0",
     "react-dom": "~16.13.0",
+    "react-date-object": "~2.1.9",
     "react-i18next": "~11.15.0",
     "react-multi-date-picker": "~4.5.2",
     "react-query": "~2.25.2",

@@ -11,11 +11,12 @@
  *   - default `format(date, formatStr, options)` — drop-in replacement for
  *     `import format from 'date-fns/format'`.
  *   - named `formatDate(date?)` — convenience helper preserving the original
- *     project util signature (safe on undefined/invalid input, MM/dd/yyyy).
+ *     project util signature (safe on undefined/invalid input, yyyy/MM/dd).
  */
-import gregorianFormat from 'date-fns/format'
 import jalaliFormat from 'date-fns-jalali/format'
 import faJalaliLocale from 'date-fns-jalali/locale/fa-jalali-IR'
+import gregorianFormat from 'date-fns/format'
+
 import i18n from '../config/i18n'
 
 type FormatOptions = Parameters<typeof gregorianFormat>[2]
@@ -51,5 +52,5 @@ export const formatDate = (date?: string | Date): string => {
   if (Number.isNaN(dateObject.getTime())) {
     return ''
   }
-  return format(dateObject, 'MM/dd/yyyy')
+  return format(dateObject, 'yyyy/MM/dd')
 }

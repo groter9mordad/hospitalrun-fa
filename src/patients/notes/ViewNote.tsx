@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
+import format from '../../shared/util/formatDate'
 import usePatientNote from '../hooks/usePatientNote'
 
 const ViewNote = () => {
@@ -17,7 +18,9 @@ const ViewNote = () => {
 
   return (
     <div>
-      <p>Date: {new Date(data.date).toLocaleString()}</p>
+      <p>
+        {t('patient.notes.date')}: {format(new Date(data.date), 'yyyy/MM/dd HH:mm')}
+      </p>
       <TextInputWithLabelFormGroup
         name="text"
         label={t('patient.note')}

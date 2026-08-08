@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Note from '../../shared/model/Note'
+import format from '../../shared/util/formatDate'
 import usePatientNotes from '../hooks/usePatientNotes'
 
 interface Props {
@@ -39,7 +40,7 @@ const NotesList = (props: Props) => {
           key={note.id}
           onClick={() => history.push(`/patients/${patientId}/notes/${note.id}`)}
         >
-          <p className="ref__note-item-date">{new Date(note.date).toLocaleString()}</p>
+          <p className="ref__note-item-date">{format(new Date(note.date), 'yyyy/MM/dd HH:mm')}</p>
           <p role="listitem" className="ref__note-item-text">
             {note.text}
           </p>

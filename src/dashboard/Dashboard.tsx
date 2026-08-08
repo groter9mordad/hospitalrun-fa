@@ -9,7 +9,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     updateTitle(t('dashboard.label'))
   })
-  return <h3>Example</h3>
+  return <h3>{t('dashboard.label')}</h3>
 }
 
 export default Dashboard
