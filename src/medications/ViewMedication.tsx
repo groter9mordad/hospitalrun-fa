@@ -17,10 +17,10 @@ import format from '../shared/util/formatDate'
 import { cancelMedication, updateMedication, fetchMedication } from './medication-slice'
 
 const getTitle = (patient: Patient | undefined, medication: Medication | undefined) =>
-  patient && medication ? `${medication.medication} for ${patient.fullName}` : ''
+  patient && medication ? `${medication.medication} برای ${patient.fullName}` : ''
 
 const ViewMedication = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const { t } = useTranslator()
   const history = useHistory()
   const dispatch = useDispatch()

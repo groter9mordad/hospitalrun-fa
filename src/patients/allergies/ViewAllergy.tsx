@@ -8,7 +8,7 @@ import useAllergy from '../hooks/useAllergy'
 
 const ViewAllergy = () => {
   const { t } = useTranslator()
-  const { allergyId, id: patientId } = useParams()
+  const { allergyId, id: patientId } = useParams<{ allergyId: string; id: string }>()
   const { data, status } = useAllergy(patientId, allergyId)
 
   if (data === undefined || status === 'loading') {

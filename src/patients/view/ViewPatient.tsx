@@ -36,10 +36,11 @@ const ViewPatient = () => {
   const { t } = useTranslator()
   const history = useHistory()
   const location = useLocation()
-  const { path } = useRouteMatch()
+  const routeMatch = useRouteMatch()
+  const path = routeMatch?.path || ''
   const setButtonToolBar = useButtonToolbarSetter()
 
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const { permissions } = useSelector((state: RootState) => state.user)
   const { data: patient, status } = usePatient(id)
 

@@ -8,7 +8,6 @@ import {
   Column,
   Row,
 } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -24,6 +23,7 @@ import Lab from '../../shared/model/Lab'
 import Note from '../../shared/model/Note'
 import Patient from '../../shared/model/Patient'
 import { RootState } from '../../shared/store'
+import format from '../../shared/util/formatDate'
 import { uuid } from '../../shared/util/uuid'
 import useRequestLab from '../hooks/useRequestLab'
 import { LabError } from '../utils/validate-lab'
@@ -61,7 +61,7 @@ const NewLabRequest = () => {
   const onPatientChange = (patient: Patient) => {
     if (patient) {
       const visits = patient.visits?.map((v) => ({
-        label: `${v.type} at ${format(new Date(v.startDateTime), 'yyyy-MM-dd hh:mm a')}`,
+        label: `${v.type} در ${format(new Date(v.startDateTime), 'yyyy-MM-dd hh:mm a')}`,
         value: v.id,
       })) as SelectOption[]
 

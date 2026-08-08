@@ -1,5 +1,4 @@
 import { Select, Label, Alert, Row, Column } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +6,7 @@ import Input from '../../shared/components/input'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import Diagnosis, { DiagnosisStatus } from '../../shared/model/Diagnosis'
 import Patient from '../../shared/model/Patient'
+import format from '../../shared/util/formatDate'
 import usePatientVisits from '../hooks/usePatientVisits'
 
 interface Error {
@@ -44,7 +44,7 @@ const DiagnosisForm = (props: Props) => {
   }
 
   const patientVisits = visits?.map((v) => ({
-    label: `${v.type} at ${format(new Date(v.startDateTime), 'yyyy-MM-dd, hh:mm a')}`,
+    label: `${v.type} در ${format(new Date(v.startDateTime), 'yyyy-MM-dd, hh:mm a')}`,
     value: v.id,
   })) as SelectOption[]
 

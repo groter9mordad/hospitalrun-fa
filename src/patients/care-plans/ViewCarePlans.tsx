@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import CarePlanTable from './CarePlanTable'
 
 const ViewCarePlans = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
 
   return <CarePlanTable patientId={id} />
 }

@@ -21,10 +21,10 @@ import useUpdateLab from './hooks/useUpdateLab'
 import { LabError } from './utils/validate-lab'
 
 const getTitle = (patient: Patient | undefined, lab: Lab | undefined) =>
-  patient && lab ? `${lab.type} for ${patient.fullName}(${lab.code})` : ''
+  patient && lab ? `${lab.type} برای ${patient.fullName} (${lab.code})` : ''
 
 const ViewLab = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const { t } = useTranslator()
   const history = useHistory()
   const { permissions } = useSelector((state: RootState) => state.user)
@@ -114,7 +114,7 @@ const ViewLab = () => {
       Toast(
         'success',
         t('states.success'),
-        `${t('labs.successfullyUpdated')} ${updatedLab?.type} for ${patient?.fullName}`,
+        `${t('labs.successfullyUpdated')} ${updatedLab?.type} برای ${patient?.fullName}`,
       )
     }
     setError(undefined)
@@ -128,7 +128,7 @@ const ViewLab = () => {
         Toast(
           'success',
           t('states.success'),
-          `${t('labs.successfullyCompleted')} ${completedLab?.type} for ${patient?.fullName} `,
+          `${t('labs.successfullyCompleted')} ${completedLab?.type} برای ${patient?.fullName} `,
         )
       }
       setError(undefined)

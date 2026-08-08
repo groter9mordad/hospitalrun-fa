@@ -1,5 +1,4 @@
 import { Select, Typeahead, Label, Button, Alert, Column, Row } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -13,6 +12,7 @@ import PatientRepository from '../../shared/db/PatientRepository'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Patient from '../../shared/model/Patient'
 import { RootState } from '../../shared/store'
+import format from '../../shared/util/formatDate'
 import useRequestImaging, { ImagingRequest } from '../hooks/useRequestImaging'
 import { ImagingRequestError } from '../util/validate-imaging-request'
 
@@ -61,7 +61,7 @@ const NewImagingRequest = () => {
       }))
 
       const visits = patient.visits?.map((v) => ({
-        label: `${v.type} at ${format(new Date(v.startDateTime), 'yyyy-MM-dd hh:mm a')}`,
+        label: `${v.type} در ${format(new Date(v.startDateTime), 'yyyy-MM-dd hh:mm a')}`,
         value: v.id,
       })) as SelectOption[]
 

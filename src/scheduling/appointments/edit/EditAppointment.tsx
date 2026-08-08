@@ -15,7 +15,7 @@ import { getAppointmentLabel } from '../util/scheduling-appointment.util'
 
 const EditAppointment = () => {
   const { t } = useTranslator()
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
 
   const updateTitle = useUpdateTitle()
   useEffect(() => {
