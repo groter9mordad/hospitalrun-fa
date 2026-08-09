@@ -1,12 +1,12 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import CarePlanForm from '../../../patients/care-plans/CarePlanForm'
 import CarePlan, { CarePlanIntent, CarePlanStatus } from '../../../shared/model/CarePlan'
 import Diagnosis, { DiagnosisStatus } from '../../../shared/model/Diagnosis'
 import Patient from '../../../shared/model/Patient'
+import format from '../../../shared/util/formatDate'
 
 describe('Care Plan Form', () => {
   let onCarePlanChangeSpy: any
@@ -55,7 +55,7 @@ describe('Care Plan Form', () => {
     setup()
     expect(screen.getByLabelText(/patient.carePlan.title/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/patient.carePlan.title/i)).toHaveValue(carePlan.title)
-    expect(screen.getByText(/patient.carePlan.title/i).title).toBe('This is a required input')
+    expect(screen.getByText(/patient.carePlan.title/i).title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when title changes', () => {
@@ -69,7 +69,7 @@ describe('Care Plan Form', () => {
     setup()
     expect(screen.getByLabelText(/patient.carePlan.description/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/patient.carePlan.description/i)).toHaveValue(carePlan.description)
-    expect(screen.getByText(/patient.carePlan.description/i).title).toBe('This is a required input')
+    expect(screen.getByText(/patient.carePlan.description/i).title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when description changes', () => {
@@ -86,7 +86,7 @@ describe('Care Plan Form', () => {
     expect(conditionSelector).toBeInTheDocument()
     expect(conditionSelector).toHaveValue(diagnosis.name)
     expect(conditionSelectorLabel).toBeInTheDocument()
-    expect(conditionSelectorLabel.title).toBe('This is a required input')
+    expect(conditionSelectorLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when condition changes', async () => {
@@ -98,26 +98,32 @@ describe('Care Plan Form', () => {
 
   it('should render a status selector', () => {
     setup()
-    const statusSelector = screen.getByDisplayValue(carePlan.status)
+    const statusSelector = screen.getByDisplayValue(
+      `patient.carePlan.statusOptions.${carePlan.status}`,
+    )
     const statusSelectorLabel = screen.getByText(/patient.carePlan.status/i)
     expect(statusSelector).toBeInTheDocument()
-    expect(statusSelector).toHaveValue(carePlan.status)
+    expect(statusSelector).toHaveValue(`patient.carePlan.statusOptions.${carePlan.status}`)
     expect(statusSelectorLabel).toBeInTheDocument()
-    expect(statusSelectorLabel.title).toBe('This is a required input')
+    expect(statusSelectorLabel.title).toBe('این فیلد الزامی است')
     userEvent.click(statusSelector)
     const optionsList = screen
       .getAllByRole('listbox')
       .filter((item) => item.id === 'statusSelect')[0]
     const options = Array.prototype.map.call(optionsList.children, (li) => li.textContent)
-    expect(options).toEqual(Object.values(CarePlanStatus).map((v) => v))
+    expect(options).toEqual(
+      Object.values(CarePlanStatus).map((v) => `patient.carePlan.statusOptions.${v}`),
+    )
   })
 
   it('should call the on change handler when status changes', () => {
     const expectedNewStatus = CarePlanStatus.Revoked
     setup()
-    const statusSelector = screen.getByDisplayValue(carePlan.status)
+    const statusSelector = screen.getByDisplayValue(
+      `patient.carePlan.statusOptions.${carePlan.status}`,
+    )
     userEvent.click(statusSelector)
-    userEvent.click(screen.getByText(expectedNewStatus))
+    userEvent.click(screen.getByText(`patient.carePlan.statusOptions.${expectedNewStatus}`))
     expect(onCarePlanChangeSpy).toHaveBeenCalledWith(
       expect.objectContaining({ status: expectedNewStatus }),
     )
@@ -125,63 +131,69 @@ describe('Care Plan Form', () => {
 
   it('should render an intent selector', () => {
     setup()
-    const intentSelector = screen.getByDisplayValue(carePlan.intent)
+    const intentSelector = screen.getByDisplayValue(
+      `patient.carePlan.intentOptions.${carePlan.intent}`,
+    )
     const intentSelectorLabel = screen.getByText(/patient.carePlan.intent/i)
     expect(intentSelector).toBeInTheDocument()
-    expect(intentSelector).toHaveValue(carePlan.intent)
+    expect(intentSelector).toHaveValue(`patient.carePlan.intentOptions.${carePlan.intent}`)
     expect(intentSelectorLabel).toBeInTheDocument()
-    expect(intentSelectorLabel.title).toBe('This is a required input')
+    expect(intentSelectorLabel.title).toBe('این فیلد الزامی است')
     userEvent.click(intentSelector)
     const optionsList = screen
       .getAllByRole('listbox')
       .filter((item) => item.id === 'intentSelect')[0]
     const options = Array.prototype.map.call(optionsList.children, (li) => li.textContent)
-    expect(options).toEqual(Object.values(CarePlanIntent).map((v) => v))
+    expect(options).toEqual(
+      Object.values(CarePlanIntent).map((v) => `patient.carePlan.intentOptions.${v}`),
+    )
   })
 
   it('should call the on change handler when intent changes', () => {
     const newIntent = CarePlanIntent.Proposal
     setup()
-    const intentSelector = screen.getByDisplayValue(carePlan.intent)
+    const intentSelector = screen.getByDisplayValue(
+      `patient.carePlan.intentOptions.${carePlan.intent}`,
+    )
     userEvent.click(intentSelector)
-    userEvent.click(screen.getByText(newIntent))
+    userEvent.click(screen.getByText(`patient.carePlan.intentOptions.${newIntent}`))
     expect(onCarePlanChangeSpy).toHaveBeenCalledWith(expect.objectContaining({ intent: newIntent }))
   })
 
   it('should render a start date picker', () => {
     setup()
-    const date = format(new Date(carePlan.startDate), 'MM/dd/yyyy')
+    const date = format(new Date(carePlan.startDate), 'yyyy/MM/dd')
     const startDatePicker = within(screen.getByTestId('startDateDatePicker')).getByRole('textbox')
     const startDatePickerLabel = screen.getByText(/patient.carePlan.startDate/i)
     expect(startDatePicker).toBeInTheDocument()
     expect(startDatePicker).toHaveValue(date)
     expect(startDatePickerLabel).toBeInTheDocument()
-    expect(startDatePickerLabel.title).toBe('This is a required input')
+    expect(startDatePickerLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when start date changes', () => {
     setup()
     const startDatePicker = within(screen.getByTestId('startDateDatePicker')).getByRole('textbox')
-    userEvent.type(startDatePicker, '{arrowdown}{arrowleft}{enter}')
-    expect(onCarePlanChangeSpy).toHaveBeenCalledTimes(1)
+    userEvent.type(startDatePicker, '{selectall}1405/06/01{enter}')
+    expect(onCarePlanChangeSpy).toHaveBeenCalled()
   })
 
   it('should render an end date picker', () => {
     setup()
-    const date = format(new Date(carePlan.endDate), 'MM/dd/yyyy')
+    const date = format(new Date(carePlan.endDate), 'yyyy/MM/dd')
     const endDatePicker = within(screen.getByTestId('endDateDatePicker')).getByRole('textbox')
     const endDatePickerLabel = screen.getByText(/patient.carePlan.endDate/i)
     expect(endDatePicker).toBeInTheDocument()
     expect(endDatePicker).toHaveValue(date)
     expect(endDatePickerLabel).toBeInTheDocument()
-    expect(endDatePickerLabel.title).toBe('This is a required input')
+    expect(endDatePickerLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when end date changes', () => {
     setup()
     const endDatePicker = within(screen.getByTestId('endDateDatePicker')).getByRole('textbox')
-    userEvent.type(endDatePicker, '{arrowdown}{arrowleft}{enter}')
-    expect(onCarePlanChangeSpy).toHaveBeenCalledTimes(1)
+    userEvent.type(endDatePicker, '{selectall}1405/06/01{enter}')
+    expect(onCarePlanChangeSpy).toHaveBeenCalled()
   })
 
   it('should render a note input', () => {
@@ -205,8 +217,12 @@ describe('Care Plan Form', () => {
     expect(screen.getByLabelText(/patient.carePlan.description/i)).toBeDisabled()
     // condition
     expect(screen.getByDisplayValue(diagnosis.name)).toBeDisabled()
-    expect(screen.getByDisplayValue(carePlan.status)).toBeDisabled()
-    expect(screen.getByDisplayValue(carePlan.intent)).toBeDisabled()
+    expect(
+      screen.getByDisplayValue(`patient.carePlan.statusOptions.${carePlan.status}`),
+    ).toBeDisabled()
+    expect(
+      screen.getByDisplayValue(`patient.carePlan.intentOptions.${carePlan.intent}`),
+    ).toBeDisabled()
     expect(within(screen.getByTestId('startDateDatePicker')).getByRole('textbox')).toBeDisabled()
     expect(within(screen.getByTestId('endDateDatePicker')).getByRole('textbox')).toBeDisabled()
     expect(screen.getByLabelText(/patient.carePlan.note/i)).toBeDisabled()

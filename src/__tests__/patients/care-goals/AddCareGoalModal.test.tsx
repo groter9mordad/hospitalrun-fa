@@ -37,6 +37,6 @@ describe('Add Care Goal Modal', () => {
   it('should render a care goal form', () => {
     setup()
 
-    expect(screen.getByLabelText('care-goal-form')).toBeInTheDocument()
+    expect(screen.getByLabelText('فرم هدف مراقبتی')).toBeInTheDocument()
   })
 })

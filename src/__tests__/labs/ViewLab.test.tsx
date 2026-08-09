@@ -1,14 +1,6 @@
 import { Toaster } from '@hospitalrun/components'
-import {
-  act,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Provider } from 'react-redux'
@@ -27,6 +19,7 @@ import Lab from '../../shared/model/Lab'
 import Patient from '../../shared/model/Patient'
 import Permissions from '../../shared/model/Permissions'
 import { RootState } from '../../shared/store'
+import format from '../../shared/util/formatDate'
 import { expectOneConsoleError } from '../test-utils/console.utils'
 
 const mockStore = createMockStore<RootState, any>([thunk])
@@ -119,20 +112,22 @@ describe('View Lab', () => {
       const completedDate = new Date('2020-10-10T10:10:10.100') // We want a different date than the mocked date
       setup({ completedOn: completedDate.toISOString() })
 
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i))
-      expect(
-        screen.queryByText(format(completedDate, 'yyyy-MM-dd HH:mm a')),
-      ).not.toBeInTheDocument()
+      await waitFor(() =>
+        expect(
+          screen.queryByText(format(completedDate, 'yyyy-MM-dd HH:mm a')),
+        ).not.toBeInTheDocument(),
+      )
     })
 
     it('should not display the cancelled date if the lab is not cancelled', async () => {
       const cancelledDate = new Date('2020-10-10T10:10:10.100') // We want a different date than the mocked date
       setup({ canceledOn: cancelledDate.toISOString() })
 
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i))
-      expect(
-        screen.queryByText(format(cancelledDate, 'yyyy-MM-dd HH:mm a')),
-      ).not.toBeInTheDocument()
+      await waitFor(() =>
+        expect(
+          screen.queryByText(format(cancelledDate, 'yyyy-MM-dd HH:mm a')),
+        ).not.toBeInTheDocument(),
+      )
     })
 
     it('should render a result text field', async () => {
@@ -148,8 +143,7 @@ describe('View Lab', () => {
     it('should not display past notes if there is not', async () => {
       setup({ notes: [] })
 
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i))
-      expect(screen.queryAllByTestId('note')).toHaveLength(0)
+      await waitFor(() => expect(screen.queryAllByTestId('note')).toHaveLength(0))
     })
 
     it('should display the past notes that are not deleted', async () => {
@@ -207,7 +201,7 @@ describe('View Lab', () => {
       it('should display a warning badge if the status is requested', async () => {
         const { mockLab } = setup()
 
-        const status = await screen.findByText(mockLab.status)
+        const status = await screen.findByText(`labs.status.${mockLab.status}`)
         expect(status.closest('span')).toHaveClass('badge-warning')
       })
 
@@ -228,7 +222,7 @@ describe('View Lab', () => {
       it('should display a danger badge if the status is canceled', async () => {
         const { mockLab } = setup({ status: 'canceled' })
 
-        const status = await screen.findByText(mockLab.status)
+        const status = await screen.findByText(`labs.status.${mockLab.status}`)
         expect(status.closest('span')).toHaveClass('badge-danger')
       })
 
@@ -253,7 +247,7 @@ describe('View Lab', () => {
           [Permissions.ViewLab, Permissions.CompleteLab, Permissions.CancelLab],
         )
 
-        await waitForElementToBeRemoved(() => screen.queryByText(/loading/i))
+        await screen.findByText('labs.status.canceled')
         expect(screen.queryByRole('button')).not.toBeInTheDocument()
       })
 
@@ -269,7 +263,7 @@ describe('View Lab', () => {
       it('should display a primary badge if the status is completed', async () => {
         const { mockLab } = setup({ status: 'completed' })
 
-        const status = await screen.findByText(mockLab.status)
+        const status = await screen.findByText(`labs.status.${mockLab.status}`)
         expect(status.closest('span')).toHaveClass('badge-primary')
       })
 
@@ -294,7 +288,7 @@ describe('View Lab', () => {
           [Permissions.ViewLab, Permissions.CompleteLab, Permissions.CancelLab],
         )
 
-        await waitForElementToBeRemoved(() => screen.queryByText(/loading/i))
+        await screen.findByText('labs.status.completed')
         expect(screen.queryByRole('button')).not.toBeInTheDocument()
       })
 

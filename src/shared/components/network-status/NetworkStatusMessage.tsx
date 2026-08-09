@@ -14,11 +14,11 @@ const BASE_STYLE = {
 
 export const NetworkStatusMessage = () => {
   const { t } = useTranslator()
-  const { isOnline, wasOffline } = useNetworkStatus()
+  const { isOnline, wasOffline, isStandalone, isSyncing } = useNetworkStatus()
   const [shouldRender, setShouldRender] = useState(true)
   const [opacity, setOpacity] = useState(1)
 
-  if (isOnline && !wasOffline) {
+  if (isStandalone || isSyncing || (isOnline && !wasOffline)) {
     return null
   }
 

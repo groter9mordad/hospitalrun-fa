@@ -34,7 +34,7 @@ describe('text field with label form group', () => {
         />,
       )
 
-      expect(screen.getByTitle(/required/i)).toBeInTheDocument()
+      expect(screen.getByTitle('این فیلد الزامی است')).toBeInTheDocument()
     })
 
     it('should render a text field', () => {

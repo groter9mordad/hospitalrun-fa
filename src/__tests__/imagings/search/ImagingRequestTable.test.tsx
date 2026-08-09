@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import ImagingSearchRequest from '../../../imagings/model/ImagingSearchRequest'
 import ImagingRequestTable from '../../../imagings/search/ImagingRequestTable'
 import ImagingRepository from '../../../shared/db/ImagingRepository'
 import Imaging from '../../../shared/model/Imaging'
+import format from '../../../shared/util/formatDate'
 
 describe('Imaging Request Table', () => {
   const expectedImaging = {

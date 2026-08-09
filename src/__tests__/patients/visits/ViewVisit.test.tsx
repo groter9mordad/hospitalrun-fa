@@ -1,5 +1,4 @@
 import { screen, render, waitFor, within } from '@testing-library/react'
-import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Route, Router } from 'react-router-dom'
@@ -8,6 +7,7 @@ import ViewVisit from '../../../patients/visits/ViewVisit'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import Patient from '../../../shared/model/Patient'
 import Visit, { VisitStatus } from '../../../shared/model/Visit'
+import format from '../../../shared/util/formatDate'
 
 describe('View Visit', () => {
   const visit: Visit = {
@@ -49,7 +49,7 @@ describe('View Visit', () => {
   it('should render a visit form with the correct data', async () => {
     setup()
 
-    expect(await screen.findByLabelText('visit form')).toBeInTheDocument()
+    expect(await screen.findByLabelText('فرم ویزیت')).toBeInTheDocument()
 
     const startDateTimePicker = within(screen.getByTestId('startDateTimeDateTimePicker')).getByRole(
       'textbox',
@@ -58,21 +58,21 @@ describe('View Visit', () => {
       'textbox',
     )
     const typeInput = screen.getByPlaceholderText(/patient.visits.type/i)
-    const statusSelector = screen.getByPlaceholderText('-- Choose --')
+    const statusSelector = screen.getByPlaceholderText('انتخاب کنید')
     const reasonInput = screen.getAllByRole('textbox', { hidden: false })[3]
     const locationInput = screen.getByPlaceholderText(/patient.visits.location/i)
 
     expect(startDateTimePicker).toHaveDisplayValue(
-      format(new Date(visit.startDateTime), 'MM/dd/yyyy h:mm aa'),
+      format(new Date(visit.startDateTime), 'yyyy/MM/dd HH:mm'),
     )
     expect(startDateTimePicker).toBeDisabled()
     expect(endDateTimePicker).toHaveDisplayValue(
-      format(new Date(visit.endDateTime), 'MM/dd/yyyy h:mm aa'),
+      format(new Date(visit.endDateTime), 'yyyy/MM/dd HH:mm'),
     )
     expect(endDateTimePicker).toBeDisabled()
     expect(typeInput).toHaveDisplayValue(visit.type)
     expect(typeInput).toBeDisabled()
-    expect(statusSelector).toHaveDisplayValue(visit.status)
+    expect(statusSelector).toHaveDisplayValue(`patient.visits.statusOptions.${visit.status}`)
     expect(statusSelector).toBeDisabled()
     expect(reasonInput).toHaveDisplayValue(visit.reason)
     expect(reasonInput).toBeDisabled()

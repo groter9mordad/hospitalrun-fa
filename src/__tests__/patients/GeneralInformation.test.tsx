@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../shared/util/formatDate'
 import startOfDay from 'date-fns/startOfDay'
 import subYears from 'date-fns/subYears'
 import { createMemoryHistory } from 'history'
@@ -9,6 +8,7 @@ import { Router } from 'react-router-dom'
 
 import GeneralInformation from '../../patients/GeneralInformation'
 import Patient from '../../shared/model/Patient'
+import format from '../../shared/util/formatDate'
 
 Date.now = jest.fn().mockReturnValue(new Date().valueOf())
 
@@ -90,7 +90,7 @@ it('should display errors', () => {
   expect(screen.getByLabelText(/patient\.givenName/i)).toHaveClass('is-invalid')
 
   expect(screen.getByText(/given name Error Message/i)).toHaveClass('invalid-feedback')
-  expect(screen.getByText(/date of birth Error Message/i)).toHaveClass('text-danger')
+  expect(screen.getByText(/date of birth Error Message/i)).toHaveClass('invalid-feedback d-block')
   expect(screen.getByText(/phone number Error Message/i)).toHaveClass('invalid-feedback')
   expect(screen.getByText(/email Error Message/i)).toHaveClass('invalid-feedback')
 
@@ -129,7 +129,7 @@ describe('General Information, readonly', () => {
 
   it('should render the date of the birth of the patient', () => {
     setup(patient, false)
-    const expectedDate = format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')
+    const expectedDate = format(new Date(patient.dateOfBirth), 'yyyy/MM/dd')
     typeReadonlyAssertion(screen.getByDisplayValue(expectedDate), [expectedDate])
   })
 
@@ -224,7 +224,7 @@ describe('General Information, isEditable', () => {
   it('should render the date of the birth of the patient', () => {
     setup(patient)
 
-    const expectedDate = format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')
+    const expectedDate = format(new Date(patient.dateOfBirth), 'yyyy/MM/dd')
     const field = screen.getByDisplayValue(expectedDate)
     typeWritableAssertion(field, [expectedDate])
 

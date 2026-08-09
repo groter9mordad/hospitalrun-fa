@@ -21,14 +21,19 @@ describe('Sidebar', () => {
     user: { permissions: allPermissions },
   } as any)
 
-  const setup = (location: string, permissions = true) => {
+  const setup = (location: string, permissions: boolean | Permissions[] = true) => {
     history = createMemoryHistory()
     history.push(location)
     return render(
       <Router history={history}>
         <Provider
           store={
-            permissions
+            Array.isArray(permissions)
+              ? mockStore({
+                  components: { sidebarCollapsed: false },
+                  user: { permissions },
+                } as any)
+              : permissions
               ? store
               : mockStore({
                   components: { sidebarCollapsed: false },
@@ -41,6 +46,22 @@ describe('Sidebar', () => {
       </Router>,
     )
   }
+
+  it('hides whole modules that are outside the current role', () => {
+    setup('/', [
+      Permissions.ReadPatients,
+      Permissions.WritePatients,
+      Permissions.ReadAppointments,
+      Permissions.WriteAppointments,
+    ])
+
+    expect(screen.getByText(/patients.label/i)).toBeInTheDocument()
+    expect(screen.getByText(/scheduling.label/i)).toBeInTheDocument()
+    expect(screen.queryByText(/labs.label/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/medications.label/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/imagings.label/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/incidents.label/i)).not.toBeInTheDocument()
+  })
 
   describe('dashboard links', () => {
     it('should render the dashboard link', () => {

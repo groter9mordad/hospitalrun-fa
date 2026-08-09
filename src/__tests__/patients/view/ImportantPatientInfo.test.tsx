@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Provider } from 'react-redux'
@@ -16,6 +15,7 @@ import Diagnosis from '../../../shared/model/Diagnosis'
 import Patient from '../../../shared/model/Patient'
 import Permissions from '../../../shared/model/Permissions'
 import { RootState } from '../../../shared/store'
+import format from '../../../shared/util/formatDate'
 
 const mockStore = createMockStore<RootState, any>([thunk])
 
@@ -35,7 +35,7 @@ describe('Important Patient Info Panel', () => {
     sex: 'male',
     fullName: 'full Name',
     code: 'P-123',
-    dateOfBirth: format(new Date(), 'MM/dd/yyyy'),
+    dateOfBirth: new Date().toISOString(),
     diagnoses: [diagnosis],
     allergies: [
       { id: '1', name: 'allergy1' },
@@ -93,12 +93,14 @@ describe('Important Patient Info Panel', () => {
 
     it("should render patient's sex", () => {
       setup(expectedPatient, [])
-      expect(screen.getByText(expectedPatient.sex)).toBeInTheDocument()
+      expect(screen.getByText(`sex.${expectedPatient.sex}`)).toBeInTheDocument()
     })
 
     it("should render patient's dateOfDate", () => {
       setup(expectedPatient, [])
-      expect(screen.getAllByText(expectedPatient.dateOfBirth)[0]).toBeInTheDocument()
+      expect(
+        screen.getAllByText(format(new Date(expectedPatient.dateOfBirth), 'yyyy/MM/dd'))[0],
+      ).toBeInTheDocument()
     })
   })
 

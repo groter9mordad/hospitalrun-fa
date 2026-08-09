@@ -1,9 +1,9 @@
-import shortid from 'shortid'
-
 import { relationalDb } from '../../../shared/config/pouchdb'
 import LabRepository from '../../../shared/db/LabRepository'
 import SortRequest from '../../../shared/db/SortRequest'
 import Lab from '../../../shared/model/Lab'
+
+const labCodeRegex = /^L-[A-F\d]{8}-[A-F\d]{4}-4[A-F\d]{3}-[89AB][A-F\d]{3}-[A-F\d]{12}$/i
 
 interface SearchContainer {
   text: string
@@ -59,7 +59,7 @@ describe('lab repository', () => {
         type: 'test',
       } as Lab)
 
-      expect(shortid.isValid(newLab.code)).toBeTruthy()
+      expect(labCodeRegex.test(newLab.code)).toBeTruthy()
     })
   })
 

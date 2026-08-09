@@ -56,7 +56,9 @@ describe('Medication Request Table', () => {
 
     expect(await screen.findByRole('table')).toBeInTheDocument()
     expect(screen.getByText(expectedSearchRequest.text)).toBeInTheDocument()
-    expect(screen.getByText(expectedSearchRequest.status)).toBeInTheDocument()
+    expect(
+      screen.getByText(`medications.status.${expectedSearchRequest.status}`),
+    ).toBeInTheDocument()
   })
 
   it('should navigate to the medication when the view button is clicked', async () => {

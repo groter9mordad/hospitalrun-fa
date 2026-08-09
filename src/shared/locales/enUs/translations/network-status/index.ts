@@ -1,6 +1,6 @@
 export default {
   networkStatus: {
-    offline: 'you are working in offline mode',
-    online: 'you are back online',
+    offline: 'The clinic network is unavailable; local work is safe and will sync later',
+    online: 'The clinic network is back; synchronization has resumed',
   },
 }

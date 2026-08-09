@@ -66,7 +66,7 @@ const pageMap: {
     icon: 'add',
   },
   viewImagings: {
-    permission: Permissions.ReadPatients,
+    permission: Permissions.ViewImagings,
     label: 'imagings.requests.label',
     path: '/imaging',
     icon: 'image',

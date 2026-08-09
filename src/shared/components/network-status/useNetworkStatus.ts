@@ -1,27 +1,32 @@
 import { useState, useEffect } from 'react'
 
+import {
+  DatabaseSyncState,
+  getDatabaseSyncState,
+  subscribeToDatabaseSync,
+} from '../../config/pouchdb'
 import { NetworkStatus } from './types'
 
 export const useNetworkStatus = (): NetworkStatus => {
-  const isOnline = navigator.onLine
-  const [networkStatus, setNetworkStatus] = useState({
-    isOnline,
-    wasOffline: !isOnline,
+  const initialSyncState = getDatabaseSyncState()
+  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>({
+    isOnline: initialSyncState === 'connected' || initialSyncState === 'standalone',
+    wasOffline: initialSyncState === 'offline',
+    isStandalone: initialSyncState === 'standalone',
+    isSyncing: initialSyncState === 'connecting',
   })
-  const handleOnline = () => {
-    setNetworkStatus((prevState) => ({ ...prevState, isOnline: true }))
-  }
-  const handleOffline = () => {
-    setNetworkStatus((prevState) => ({ ...prevState, isOnline: false, wasOffline: true }))
-  }
-  useEffect(() => {
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
 
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
+  useEffect(() => {
+    const handleSyncState = (syncState: DatabaseSyncState) => {
+      setNetworkStatus((previousState) => ({
+        isOnline: syncState === 'connected' || syncState === 'standalone',
+        wasOffline: previousState.wasOffline || syncState === 'offline',
+        isStandalone: syncState === 'standalone',
+        isSyncing: syncState === 'connecting',
+      }))
     }
+
+    return subscribeToDatabaseSync(handleSyncState)
   }, [])
 
   return networkStatus

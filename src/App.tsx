@@ -3,47 +3,57 @@
 import { Spinner } from '@hospitalrun/components'
 import React, { Suspense, useEffect, useState } from 'react'
 import { ReactQueryDevtools } from 'react-query-devtools'
-import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import HospitalRun from './HospitalRun'
 import { TitleProvider } from './page-header/title/TitleContext'
-import { remoteDb } from './shared/config/pouchdb'
-import { getCurrentSession } from './user/user-slice'
+import { startLocalBackupScheduler } from './shared/backup/localBackup'
+import { configureDatabaseSync } from './shared/config/pouchdb'
+import { loadSyncConfiguration } from './shared/config/syncConfiguration'
+import { RootState } from './shared/store'
+import { hasLocalUsers } from './user/local-auth'
+import LoginScreen from './user/LoginScreen'
+import SetupAdministrator from './user/SetupAdministrator'
 
 const App: React.FC = () => {
-  const dispatch = useDispatch()
-  const [loading, setLoading] = useState(true)
+  const user = useSelector((state: RootState) => state.user.user)
+  const [hasUsers, setHasUsers] = useState<boolean | undefined>(undefined)
+
+  useEffect(() => startLocalBackupScheduler(), [])
 
   useEffect(() => {
-    let cancelled = false
-
-    remoteDb
-      .getSession()
-      .then((session) => {
-        if (cancelled) {
-          return
+    let mounted = true
+    const initialize = async () => {
+      try {
+        const syncConfiguration = await loadSyncConfiguration()
+        await configureDatabaseSync(syncConfiguration)
+        const localUsersExist = await hasLocalUsers()
+        if (mounted) {
+          setHasUsers(localUsersExist)
         }
-        if (session.userCtx.name) {
-          dispatch(getCurrentSession(session.userCtx.name))
+      } catch (error) {
+        if (mounted) {
+          setHasUsers(false)
         }
-      })
-      .catch((e) => {
-        console.log(e)
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      })
-
-    return () => {
-      cancelled = true
+      }
     }
-  }, [dispatch])
+    initialize()
+    return () => {
+      mounted = false
+    }
+  }, [])
 
-  if (loading) {
+  if (hasUsers === undefined) {
     return null
+  }
+
+  if (!hasUsers) {
+    return <SetupAdministrator onComplete={() => setHasUsers(true)} />
+  }
+
+  if (!user) {
+    return <LoginScreen />
   }
 
   return (

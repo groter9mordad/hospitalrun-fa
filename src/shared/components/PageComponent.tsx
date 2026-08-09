@@ -1,14 +1,15 @@
-import { Button, Select } from '@hospitalrun/components'
+import { Button } from '@hospitalrun/components'
 import React from 'react'
 
 import useTranslator from '../hooks/useTranslator'
+import Select from './input/PersianSelect'
 
 const pageSizes = [
-  { label: '25', value: 25 },
-  { label: '50', value: 50 },
-  { label: '100', value: 100 },
-  { label: '200', value: 200 },
-  { label: 'All', value: undefined },
+  { label: '۲۵', value: 25 },
+  { label: '۵۰', value: 50 },
+  { label: '۱۰۰', value: 100 },
+  { label: '۲۰۰', value: 200 },
+  { label: 'همه', value: undefined },
 ]
 
 export const defaultPageSize = pageSizes[0]
@@ -48,7 +49,7 @@ const PageComponent = ({
         {t('actions.page')} {pageNumber}
       </div>
       <div className="row float-right">
-        <Select id="page" options={pageSizes} />
+        <Select id="page" options={pageSizes} defaultSelected={[defaultPageSize]} />
       </div>
     </div>
   )

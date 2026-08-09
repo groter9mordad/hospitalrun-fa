@@ -1,10 +1,10 @@
 import { Alert, Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
+import format from '../../shared/util/formatDate'
 import usePatientDiagnoses from '../hooks/usePatientDiagnoses'
 
 interface Props {
@@ -55,7 +55,11 @@ const DiagnosisTable = (props: Props) => {
           formatter: (row) =>
             format(row.abatementDate ? new Date(row.abatementDate) : new Date(0), 'yyyy-MM-dd'),
         },
-        { label: t('patient.diagnoses.status'), key: 'status' },
+        {
+          label: t('patient.diagnoses.status'),
+          key: 'status',
+          formatter: (row) => t(`patient.diagnoses.statusOptions.${row.status}`),
+        },
       ]}
       actionsHeaderText={t('actions.label')}
       actions={[

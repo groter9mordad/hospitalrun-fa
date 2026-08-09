@@ -1,6 +1,7 @@
-import { Select, Label, Row, Column } from '@hospitalrun/components'
+import { Label, Row, Column } from '@hospitalrun/components'
 import React, { ChangeEvent } from 'react'
 
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import useTranslator from '../../shared/hooks/useTranslator'

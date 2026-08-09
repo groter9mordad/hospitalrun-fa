@@ -1,11 +1,11 @@
 import { screen, render, waitFor } from '@testing-library/react'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import PatientSearchRequest from '../../../patients/models/PatientSearchRequest'
 import ViewPatientsTable from '../../../patients/search/ViewPatientsTable'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import Patient from '../../../shared/model/Patient'
+import format from '../../../shared/util/formatDate'
 
 describe('View Patients Table', () => {
   const setup = (expectedSearchRequest: PatientSearchRequest, expectedPatients: Patient[]) => {
@@ -38,7 +38,7 @@ describe('View Patients Table', () => {
       givenName: 'givenName',
       familyName: 'familyName',
       code: 'test code',
-      sex: 'sex',
+      sex: 'male',
       dateOfBirth: new Date(2010, 1, 1, 1, 1, 1, 1).toISOString(),
     } as Patient
     const expectedPatients = [expectedPatient]
@@ -56,15 +56,17 @@ describe('View Patients Table', () => {
     expect(screen.getByRole('columnheader', { name: /actions\.label/i })).toBeInTheDocument()
 
     Object.keys(expectedPatient)
-      .filter((key) => key !== 'id' && key !== 'dateOfBirth')
+      .filter((key) => key !== 'id' && key !== 'dateOfBirth' && key !== 'sex')
       .forEach((key) => {
         expect(
           screen.getByRole('cell', { name: expectedPatient[key as keyof Patient] as string }),
         ).toBeInTheDocument()
       })
 
+    expect(screen.getByRole('cell', { name: 'sex.male' })).toBeInTheDocument()
+
     expect(cells[4]).toHaveTextContent(
-      format(Date.parse(expectedPatient.dateOfBirth), 'MM/dd/yyyy'),
+      format(Date.parse(expectedPatient.dateOfBirth), 'yyyy/MM/dd'),
     )
   })
 })

@@ -1,6 +1,6 @@
 export default {
   networkStatus: {
-    offline: "Ofline Mod'da çalışıyorsunuz",
-    online: 'Şu an online moddasınız',
+    offline: 'Klinik ağı kullanılamıyor; yerel çalışmalar güvende ve daha sonra eşitlenecek',
+    online: 'Klinik ağı geri döndü; eşitleme devam ediyor',
   },
 }

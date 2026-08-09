@@ -66,11 +66,11 @@ describe('New Medication Request', () => {
 
       const statusOptions = within(screen.getByTestId('statusSelect'))
         .getAllByRole('option')
-        .map((option) => option.lastElementChild?.innerHTML)
+        .map((option) => option.textContent)
 
-      expect(
-        statusOptions.includes('medications.status.draft' && 'medications.status.active'),
-      ).toBe(true)
+      expect(statusOptions).toEqual(
+        expect.arrayContaining(['medications.status.draft', 'medications.status.active']),
+      )
     })
 
     it('render medication intent options', async () => {
@@ -82,24 +82,24 @@ describe('New Medication Request', () => {
       expect(medicationIntent.getAttribute('aria-expanded')).toBe('false')
       selectEvent.openMenu(medicationIntent)
       expect(medicationIntent.getAttribute('aria-expanded')).toBe('true')
-      expect(medicationIntent).toHaveDisplayValue(/medications\.intent\.proposal/i)
+      expect(medicationIntent).toHaveDisplayValue(/medications\.intent\.order/i)
 
       const intentOptions = within(screen.getByTestId('intentSelect'))
         .getAllByRole('option')
-        .map((option) => option.lastElementChild?.innerHTML)
+        .map((option) => option.textContent)
 
-      expect(
-        intentOptions.includes(
-          'medications.intent.proposal' &&
-            'medications.intent.plan' &&
-            'medications.intent.order' &&
-            'medications.intent.originalOrder' &&
-            'medications.intent.reflexOrder' &&
-            'medications.intent.fillerOrder' &&
-            'medications.intent.instanceOrder' &&
-            'medications.intent.option',
-        ),
-      ).toBe(true)
+      expect(intentOptions).toEqual(
+        expect.arrayContaining([
+          'medications.intent.proposal',
+          'medications.intent.plan',
+          'medications.intent.order',
+          'medications.intent.originalOrder',
+          'medications.intent.reflexOrder',
+          'medications.intent.fillerOrder',
+          'medications.intent.instanceOrder',
+          'medications.intent.option',
+        ]),
+      )
     })
 
     it('render medication priorty select options', async () => {
@@ -115,16 +115,16 @@ describe('New Medication Request', () => {
 
       const priorityOptions = within(screen.getByTestId('prioritySelect'))
         .getAllByRole('option')
-        .map((option) => option.lastElementChild?.innerHTML)
+        .map((option) => option.textContent)
 
-      expect(
-        priorityOptions.includes(
-          'medications.priority.routine' &&
-            'medications.priority.urgent' &&
-            'medications.priority.asap' &&
-            'medications.priority.stat',
-        ),
-      ).toBe(true)
+      expect(priorityOptions).toEqual(
+        expect.arrayContaining([
+          'medications.priority.routine',
+          'medications.priority.urgent',
+          'medications.priority.asap',
+          'medications.priority.stat',
+        ]),
+      )
     })
 
     it('should render a notes text field', async () => {

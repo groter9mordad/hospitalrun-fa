@@ -8,6 +8,7 @@ import NotesList from '../../../patients/notes/NotesList'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import Note from '../../../shared/model/Note'
 import Patient from '../../../shared/model/Patient'
+import format from '../../../shared/util/formatDate'
 
 describe('Notes list', () => {
   const setup = (notes: Note[]) => {
@@ -41,7 +42,7 @@ describe('Notes list', () => {
     ]
     setup(expectedNotes)
 
-    const dateString = new Date(expectedNotes[0].date).toLocaleString()
+    const dateString = format(new Date(expectedNotes[0].date), 'yyyy/MM/dd HH:mm')
     await waitFor(() => {
       expect(
         screen.getByRole('button', {
@@ -69,7 +70,7 @@ describe('Notes list', () => {
     const expectedNotes = [{ id: '456', text: 'some name', date: '1947-09-09T14:48:00.000Z' }]
     const { history } = setup(expectedNotes)
 
-    const dateString = new Date(expectedNotes[0].date).toLocaleString()
+    const dateString = format(new Date(expectedNotes[0].date), 'yyyy/MM/dd HH:mm')
     const item = await screen.findByRole('button', {
       name: `${dateString} some name`,
     })

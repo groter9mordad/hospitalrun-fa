@@ -16,6 +16,7 @@ import Patient from '../../../shared/model/Patient'
 import { PatientHistoryRecord, HistoryRecordType } from '../../../shared/model/PatientHistoryRecord'
 import Permissions from '../../../shared/model/Permissions'
 import { RootState } from '../../../shared/store'
+import format from '../../../shared/util/formatDate'
 
 const mockStore = createMockStore<RootState, any>([thunk])
 const history = createMemoryHistory()
@@ -106,8 +107,8 @@ describe('HistoryTable', () => {
       await screen.findByRole('table')
 
       const cells = screen.getAllByRole('cell')
-      expect(cells[0]).toHaveTextContent('2021-01-01 12:00 AM')
-      expect(cells[1]).toHaveTextContent(HistoryRecordType.LAB)
+      expect(cells[0]).toHaveTextContent(format(mockHistoryRecords[0].date, 'yyyy-MM-dd hh:mm a'))
+      expect(cells[1]).toHaveTextContent('patient.history.recordTypes.lab')
       expect(cells[2]).toHaveTextContent('Requested - emergency incident')
     })
 

@@ -1,6 +1,7 @@
-import { Select, Label, Spinner, Row, Column, Icon } from '@hospitalrun/components'
+import { Label, Spinner, Row, Column, Icon } from '@hospitalrun/components'
 import React, { useEffect, ReactElement } from 'react'
 
+import Select from '../shared/components/input/PersianSelect'
 import { SelectOption } from '../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../shared/components/input/TextInputWithLabelFormGroup'

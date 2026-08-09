@@ -1,13 +1,15 @@
 import subDays from 'date-fns/subDays'
-import shortid from 'shortid'
 
 import useReportIncident from '../../../incidents/hooks/useReportIncident'
 import * as incidentValidator from '../../../incidents/util/validate-incident'
 import { IncidentError } from '../../../incidents/util/validate-incident'
 import IncidentRepository from '../../../shared/db/IncidentRepository'
 import Incident from '../../../shared/model/Incident'
+import generateCode from '../../../shared/util/generateCode'
 import { expectOneConsoleError } from '../../test-utils/console.utils'
 import executeMutation from '../../test-utils/use-mutation.util'
+
+jest.mock('../../../shared/util/generateCode')
 
 describe('useReportIncident', () => {
   beforeEach(() => {
@@ -15,7 +17,7 @@ describe('useReportIncident', () => {
   })
 
   it('should save the incident with correct data', async () => {
-    const expectedCode = '123456'
+    const expectedCode = 'I-123456'
     const expectedDate = new Date(Date.now())
     const expectedStatus = 'reported'
     const expectedReportedBy = 'some user'
@@ -31,12 +33,13 @@ describe('useReportIncident', () => {
 
     const expectedIncident = {
       ...givenIncidentRequest,
-      code: `I-${expectedCode}`,
+      code: expectedCode,
       reportedOn: expectedDate.toISOString(),
       status: expectedStatus,
       reportedBy: expectedReportedBy,
     } as Incident
-    jest.spyOn(shortid, 'generate').mockReturnValue(expectedCode)
+    const mockedGenerateCode = generateCode as jest.MockedFunction<typeof generateCode>
+    mockedGenerateCode.mockReturnValue(expectedCode)
     jest.spyOn(IncidentRepository, 'save').mockResolvedValue(expectedIncident)
 
     const actualData = await executeMutation(() => useReportIncident(), givenIncidentRequest)

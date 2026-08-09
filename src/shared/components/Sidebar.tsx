@@ -412,6 +412,9 @@ const Sidebar = () => {
     </>
   )
 
+  const hasAnyPermission = (...requiredPermissions: Permissions[]) =>
+    requiredPermissions.some((permission) => permissions.includes(permission))
+
   return (
     <nav
       className="d-none d-md-block bg-light sidebar"
@@ -430,12 +433,24 @@ const Sidebar = () => {
             />
           </ListItem>
           {getDashboardLink()}
-          {getPatientLinks()}
-          {getAppointmentLinks()}
-          {getMedicationLinks()}
-          {getLabLinks()}
-          {getImagingLinks()}
-          {getIncidentLinks()}
+          {hasAnyPermission(Permissions.ReadPatients, Permissions.WritePatients) &&
+            getPatientLinks()}
+          {hasAnyPermission(Permissions.ReadAppointments, Permissions.WriteAppointments) &&
+            getAppointmentLinks()}
+          {hasAnyPermission(
+            Permissions.ViewMedications,
+            Permissions.RequestMedication,
+            Permissions.ViewMedication,
+          ) && getMedicationLinks()}
+          {hasAnyPermission(Permissions.ViewLabs, Permissions.RequestLab, Permissions.ViewLab) &&
+            getLabLinks()}
+          {hasAnyPermission(Permissions.ViewImagings, Permissions.RequestImaging) &&
+            getImagingLinks()}
+          {hasAnyPermission(
+            Permissions.ViewIncidents,
+            Permissions.ReportIncident,
+            Permissions.ViewIncidentWidgets,
+          ) && getIncidentLinks()}
         </List>
       </div>
     </nav>

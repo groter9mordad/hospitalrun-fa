@@ -67,15 +67,13 @@ describe('Medications', () => {
       it('should render the new medication request screen when /medications/new is accessed', () => {
         setup('/medications/new', [Permissions.RequestMedication])
 
-        expect(screen.getByRole('form', { name: /medication request form/i })).toBeInTheDocument()
+        expect(screen.getByRole('form', { name: 'فرم درخواست دارو' })).toBeInTheDocument()
       })
 
       it('should not navigate to /medications/new if the user does not have RequestMedication permissions', () => {
         setup('/medications/new')
 
-        expect(
-          screen.queryByRole('form', { name: /medication request form/i }),
-        ).not.toBeInTheDocument()
+        expect(screen.queryByRole('form', { name: 'فرم درخواست دارو' })).not.toBeInTheDocument()
       })
     })
 
@@ -83,14 +81,20 @@ describe('Medications', () => {
       it('should render the view medication screen when /medications/:id is accessed', async () => {
         setup('/medications/1234', [Permissions.ViewMedication])
 
-        expect(screen.getByRole('heading', { name: expectedMedication.status })).toBeInTheDocument()
+        expect(
+          screen.getByRole('heading', {
+            name: `medications.status.${expectedMedication.status}`,
+          }),
+        ).toBeInTheDocument()
       })
 
       it('should not navigate to /medications/:id if the user does not have ViewMedication permissions', async () => {
         setup('/medications/1234')
 
         expect(
-          screen.queryByRole('heading', { name: expectedMedication.status }),
+          screen.queryByRole('heading', {
+            name: `medications.status.${expectedMedication.status}`,
+          }),
         ).not.toBeInTheDocument()
       })
     })

@@ -1,12 +1,12 @@
 import getTime from 'date-fns/getTime'
 import isAfter from 'date-fns/isAfter'
-import shortid from 'shortid'
 
 import { relationalDb } from '../../../shared/config/pouchdb'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import Patient from '../../../shared/model/Patient'
 
 const uuidV4Regex = /^[A-F\d]{8}-[A-F\d]{4}-4[A-F\d]{3}-[89AB][A-F\d]{3}-[A-F\d]{12}$/i
+const patientCodeRegex = /^P-[A-F\d]{8}-[A-F\d]{4}-4[A-F\d]{3}-[89AB][A-F\d]{3}-[A-F\d]{12}$/i
 
 async function removeAllDocs() {
   const docs = await relationalDb.rel.find('patient')
@@ -146,7 +146,7 @@ describe('patient repository', () => {
         fullName: 'test1 test1',
       } as Patient)
 
-      expect(shortid.isValid(newPatient.code)).toBeTruthy()
+      expect(patientCodeRegex.test(newPatient.code)).toBeTruthy()
     })
 
     it('should generate a timestamp for created date and last updated date', async () => {

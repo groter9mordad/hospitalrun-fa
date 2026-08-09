@@ -1,7 +1,6 @@
 import { Toaster } from '@hospitalrun/components'
 import { render, screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Provider } from 'react-redux'
@@ -19,6 +18,7 @@ import Lab from '../../../shared/model/Lab'
 import Patient from '../../../shared/model/Patient'
 import Visit from '../../../shared/model/Visit'
 import { RootState } from '../../../shared/store'
+import format from '../../../shared/util/formatDate'
 import { expectOneConsoleError } from '../../test-utils/console.utils'
 
 const mockStore = createMockStore<RootState, any>([thunk])
@@ -101,10 +101,7 @@ describe('New Lab Request', () => {
     it('should render a type input box', async () => {
       setup()
 
-      expect(screen.getByText(/labs\.lab\.type/i)).toHaveAttribute(
-        'title',
-        'This is a required input',
-      )
+      expect(screen.getByText(/labs\.lab\.type/i)).toHaveAttribute('title', 'این فیلد الزامی است')
       expect(screen.getByLabelText(/labs\.lab\.type/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/labs\.lab\.type/i)).not.toBeDisabled()
     })
@@ -115,7 +112,7 @@ describe('New Lab Request', () => {
       expect(screen.getByLabelText(/labs\.lab\.notes/i)).not.toBeDisabled()
       expect(screen.getByText(/labs\.lab\.notes/i)).not.toHaveAttribute(
         'title',
-        'This is a required input',
+        'این فیلد الزامی است',
       )
     })
 
@@ -128,7 +125,7 @@ describe('New Lab Request', () => {
       expect(selectInput).toBeInTheDocument()
       expect(selectInput).toHaveDisplayValue([''])
       expect(selectLabel).toBeInTheDocument()
-      expect(selectLabel).toHaveAttribute('title', 'This is a required input')
+      expect(selectLabel).toHaveAttribute('title', 'این فیلد الزامی است')
     })
 
     it('should render a save button', () => {
@@ -154,20 +151,13 @@ describe('New Lab Request', () => {
 
       userEvent.click(visitsInput)
       // The visits dropdown should be populated with the patient's visits.
-      userEvent.click(
-        await screen.findByRole('link', {
-          name: `${expectedVisits[0].type} at ${format(
-            new Date(expectedVisits[0].startDateTime),
-            'yyyy-MM-dd hh:mm a',
-          )}`,
-        }),
-      )
-      expect(visitsInput).toHaveDisplayValue(
-        `${expectedVisits[0].type} at ${format(
-          new Date(expectedVisits[0].startDateTime),
-          'yyyy-MM-dd hh:mm a',
-        )}`,
-      )
+      const visitLabel = `${expectedVisits[0].type} در ${format(
+        new Date(expectedVisits[0].startDateTime),
+        'yyyy-MM-dd hh:mm a',
+      )}`
+      const visitOption = await screen.findByRole('option', { name: visitLabel })
+      userEvent.click(within(visitOption).getByRole('link'))
+      expect(visitsInput).toHaveDisplayValue(visitLabel)
 
       userEvent.clear(patientTypeahead)
       await waitFor(() => {
@@ -175,11 +165,8 @@ describe('New Lab Request', () => {
         expect(visitsInput).toHaveDisplayValue('')
       })
       expect(
-        screen.queryByRole('link', {
-          name: `${expectedVisits[0].type} at ${format(
-            new Date(expectedVisits[0].startDateTime),
-            'yyyy-MM-dd hh:mm a',
-          )}`,
+        screen.queryByRole('option', {
+          name: visitLabel,
         }),
       ).not.toBeInTheDocument()
     })

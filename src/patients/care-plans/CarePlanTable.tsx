@@ -1,10 +1,10 @@
 import { Alert, Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
+import format from '../../shared/util/formatDate'
 import usePatientCarePlans from '../hooks/usePatientCarePlans'
 
 interface Props {
@@ -47,7 +47,11 @@ const CarePlanTable = (props: Props) => {
           key: 'endDate',
           formatter: (row) => format(new Date(row.endDate), 'yyyy-MM-dd'),
         },
-        { label: t('patient.carePlan.status'), key: 'status' },
+        {
+          label: t('patient.carePlan.status'),
+          key: 'status',
+          formatter: (row) => t(`patient.carePlan.statusOptions.${row.status}`),
+        },
       ]}
       actionsHeaderText={t('actions.label')}
       actions={[

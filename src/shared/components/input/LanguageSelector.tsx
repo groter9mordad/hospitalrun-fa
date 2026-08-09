@@ -1,8 +1,9 @@
-import { Select, Label } from '@hospitalrun/components'
+import { Label } from '@hospitalrun/components'
 import React from 'react'
 
 import { resources } from '../../config/i18n'
 import useTranslator from '../../hooks/useTranslator'
+import Select from './PersianSelect'
 import { SelectOption } from './SelectOption'
 
 const LanguageSelector = () => {

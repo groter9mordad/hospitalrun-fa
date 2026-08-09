@@ -1,49 +1,92 @@
-name: Build Persian Windows Installer
+name: Windows installer
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - .github/workflows/windows-installer.yml
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-installer-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  windows-installer:
+  build-windows-installer:
     runs-on: windows-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
-      - name: Checkout
+      - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Use Node 16
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 16.20.2
+          node-version: 22
+          cache: npm
 
-      - name: Install dependencies
-        shell: pwsh
-        run: |
-          npm install --legacy-peer-deps --no-package-lock --ignore-scripts
-          npm install --no-save --legacy-peer-deps --ignore-scripts @types/lodash@4.14.178 @types/minimatch@5.1.2 @types/ms@0.7.31 @types/react@17.0.0 @types/react-dom@17.0.0 @types/react-router@5.1.2 @types/react-router-dom@5.3.0 @types/node@17.0.0
-          npm rebuild node-sass
+      - name: Install locked dependencies
+        run: npm ci --legacy-peer-deps
 
-      - name: Build Persian Jalali frontend
-        run: npm run build
+      - name: Check Persian translations
+        run: npm run translation:check
 
-      - name: Package Windows application
-        shell: pwsh
-        run: npx electron-packager . runcdx --platform=win32 --arch=x64 --electron-version=22.3.27 --out=dist-electron --overwrite --asar --prune=true
+      - name: Lint source
+        run: npm run lint -- --quiet
+
+      - name: Run all tests
+        run: npm run test:ci -- --watchAll=false
 
       - name: Build NSIS installer
-        shell: pwsh
-        run: npx electron-builder@24.13.3 --win nsis --x64 --prepackaged dist-electron/runcdx-win32-x64 --publish never
+        run: npm run dist:win
 
-      - name: Upload installer
+      - name: Smoke test packaged desktop app
+        shell: pwsh
+        run: |
+          $executable = Resolve-Path "release/win-unpacked/RunCDX.exe"
+          $process = Start-Process -FilePath $executable -PassThru
+          Start-Sleep -Seconds 15
+          if ($process.HasExited) {
+            throw "RunCDX exited during the Windows smoke test with code $($process.ExitCode)."
+          }
+          Stop-Process -Id $process.Id -Force
+          Get-Process RunCDX -ErrorAction SilentlyContinue | Stop-Process -Force
+
+      - name: Create SHA-256 checksum
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem "release/RunCDX-Setup-*.exe" | Select-Object -First 1
+          if (-not $setup) { throw "Windows installer was not created." }
+          $hash = (Get-FileHash $setup.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $($setup.Name)" | Set-Content "release/SHA256SUMS.txt" -Encoding ascii
+
+      - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
-          name: runcdx-windows-installer
-          path: dist-installer/*.exe
+          name: RunCDX-Windows-${{ github.ref_name }}
           if-no-files-found: error
-          compression-level: 0
           retention-days: 30
+          path: |
+            release/RunCDX-Setup-*.exe
+            release/SHA256SUMS.txt
+            deployment/windows/Install-RunCDXServer.ps1
+            deployment/windows/README-fa.md
+
+      - name: Publish permanent GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release view $env:RELEASE_TAG *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $env:RELEASE_TAG --verify-tag --generate-notes --title "RunCDX $env:RELEASE_TAG"
+          }
+          Get-ChildItem "release/RunCDX-Setup-*.exe", "release/SHA256SUMS.txt" |
+            ForEach-Object { gh release upload $env:RELEASE_TAG $_.FullName --clobber }
+          gh release upload $env:RELEASE_TAG "deployment/windows/Install-RunCDXServer.ps1" --clobber
+          gh release upload $env:RELEASE_TAG "deployment/windows/README-fa.md" --clobber

@@ -10,6 +10,7 @@ import * as ButtonBarProvider from '../../../page-header/button-toolbar/ButtonBa
 import IncidentRepository from '../../../shared/db/IncidentRepository'
 import Incident from '../../../shared/model/Incident'
 import Permissions from '../../../shared/model/Permissions'
+import format from '../../../shared/util/formatDate'
 
 describe('View Incident Details', () => {
   const expectedDate = new Date(2020, 5, 1, 19, 48)
@@ -64,7 +65,9 @@ describe('View Incident Details', () => {
         ).toBeInTheDocument()
 
         expect(
-          await screen.findByRole('heading', { name: /2020-06-01 07:48 PM/i }),
+          await screen.findByRole('heading', {
+            name: format(expectedDate, 'yyyy-MM-dd hh:mm a'),
+          }),
         ).toBeInTheDocument()
       })
 
@@ -77,7 +80,9 @@ describe('View Incident Details', () => {
           }),
         ).toBeInTheDocument()
 
-        expect(await screen.findByRole('heading', { name: 'reported' })).toBeInTheDocument()
+        expect(
+          await screen.findByRole('heading', { name: 'incidents.status.reported' }),
+        ).toBeInTheDocument()
       })
 
       it('should render who reported the incident', async () => {
@@ -101,7 +106,9 @@ describe('View Incident Details', () => {
         ).toBeInTheDocument()
 
         expect(
-          await screen.findByRole('heading', { name: /2020-06-01 07:50 PM/i }),
+          await screen.findByRole('heading', {
+            name: format(reportedDate, 'yyyy-MM-dd hh:mm a'),
+          }),
         ).toBeInTheDocument()
       })
     })

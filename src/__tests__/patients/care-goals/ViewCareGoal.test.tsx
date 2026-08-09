@@ -32,6 +32,6 @@ describe('View Care Goal', () => {
   it('should render the care goal form', async () => {
     setup()
 
-    expect(await screen.findByLabelText('care-goal-form')).toBeInTheDocument()
+    expect(await screen.findByLabelText('فرم هدف مراقبتی')).toBeInTheDocument()
   })
 })

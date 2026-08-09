@@ -2,7 +2,6 @@ import { Toaster } from '@hospitalrun/components'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import addMinutes from 'date-fns/addMinutes'
-import format from '../../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { queryCache } from 'react-query'
@@ -21,6 +20,7 @@ import Appointment from '../../../../shared/model/Appointment'
 import Patient from '../../../../shared/model/Patient'
 import Permissions from '../../../../shared/model/Permissions'
 import { RootState } from '../../../../shared/store'
+import format from '../../../../shared/util/formatDate'
 
 const { TitleProvider } = titleUtil
 const mockStore = createMockStore<RootState, any>([thunk])
@@ -134,12 +134,12 @@ describe('View Appointment', () => {
     expect(patientInput).toBeDisabled()
 
     const startDateInput = screen.getByDisplayValue(
-      format(new Date(expectedAppointment.startDateTime), 'MM/dd/yyyy h:mm a'),
+      format(new Date(expectedAppointment.startDateTime), 'yyyy/MM/dd HH:mm'),
     )
     expect(startDateInput).toBeDisabled()
 
     const endDateInput = screen.getByDisplayValue(
-      format(new Date(expectedAppointment.endDateTime), 'MM/dd/yyyy h:mm a'),
+      format(new Date(expectedAppointment.endDateTime), 'yyyy/MM/dd HH:mm'),
     )
     expect(endDateInput).toBeDisabled()
 

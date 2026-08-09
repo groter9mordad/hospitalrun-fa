@@ -1,10 +1,11 @@
-import { Select, Label, Panel, Checkbox, Alert } from '@hospitalrun/components'
+import { Label, Panel, Checkbox, Alert } from '@hospitalrun/components'
 import differenceInYears from 'date-fns/differenceInYears'
 import startOfDay from 'date-fns/startOfDay'
 import subYears from 'date-fns/subYears'
 import React, { ReactElement } from 'react'
 
 import DatePickerWithLabelFormGroup from '../shared/components/input/DatePickerWithLabelFormGroup'
+import Select from '../shared/components/input/PersianSelect'
 import { SelectOption } from '../shared/components/input/SelectOption'
 import TextInputWithLabelFormGroup from '../shared/components/input/TextInputWithLabelFormGroup'
 import useTranslator from '../shared/hooks/useTranslator'

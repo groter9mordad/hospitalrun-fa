@@ -31,7 +31,7 @@ describe('AppointmentDetailForm', () => {
 
     const types = ['checkup', 'emergency', 'followUp', 'routine', 'walkIn']
 
-    userEvent.click(screen.getByPlaceholderText('-- Choose --'))
+    userEvent.click(screen.getByPlaceholderText('انتخاب کنید'))
 
     types.forEach((type) => {
       const typeOption = screen.getByRole('option', {

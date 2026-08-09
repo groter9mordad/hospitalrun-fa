@@ -1,40 +1,74 @@
-# HospitalRun Frontend
+# RunCDX
 
-<div align="center">
+RunCDX نسخهٔ فارسی و آفلاین نرم‌افزار مدیریت درمانگاه HospitalRun برای ویندوز ۱۰ و
+۱۱ است. رابط برنامه راست‌به‌چپ است و تاریخ‌ها در تمام بخش‌های قابل مشاهده به تقویم
+شمسی نمایش داده می‌شوند.
 
-![Status](https://img.shields.io/badge/Status-developing-brightgree) [![Release](https://img.shields.io/github/release/HospitalRun/hospitalrun-frontend.svg)](https://github.com/HospitalRun/hospitalrun-frontend/releases) [![Version](https://img.shields.io/github/package-json/v/hospitalrun/hospitalrun-frontend)](https://github.com/HospitalRun/hospitalrun-frontend/releases)
-[![GitHub CI](https://github.com/HospitalRun/frontend/workflows/GitHub%20CI/badge.svg)](https://github.com/HospitalRun/frontend/actions) [![Coverage Status](https://coveralls.io/repos/github/HospitalRun/hospitalrun-frontend/badge.svg?branch=master)](https://coveralls.io/github/HospitalRun/hospitalrun-frontend?branch=master) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/HospitalRun/hospitalrun-frontend.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HospitalRun/hospitalrun-frontend/context:javascript) ![Code scanning](https://github.com/HospitalRun/hospitalrun-frontend/workflows/Code%20scanning/badge.svg?branch=master) [![Documentation Status](https://readthedocs.org/projects/hospitalrun-frontend/badge/?version=latest)](https://hospitalrun-frontend.readthedocs.io)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHospitalRun%2Fhospitalrun-frontend.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHospitalRun%2Fhospitalrun-frontend?ref=badge_large) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-![dependabot](https://api.dependabot.com/badges/status?host=github&repo=HospitalRun/hospitalrun-frontend) [![Slack](https://hospitalrun-slack.herokuapp.com/badge.svg)](https://hospitalrun-slack.herokuapp.com)
+## امکانات آماده
 
-</div>
+- نصب به‌صورت نرم‌افزار واقعی ویندوز با میانبر Desktop و Start Menu
+- ثبت بیمار، ویزیت، نوبت، آزمایش، تصویربرداری، دارو و رخدادها
+- ورود جداگانهٔ کاربران و نقش‌های مدیر، پزشک، پذیرش، آزمایشگاه و داروخانه
+- ذخیرهٔ همیشگی اطلاعات روی همان کامپیوتر و ادامهٔ کار بدون اینترنت و بدون مودم
+- همگام‌سازی چند کامپیوتر روی شبکهٔ داخلی مطب با Apache CouchDB
+- ادامهٔ ثبت اطلاعات هنگام قطع برق مودم و همگام‌سازی تغییرات پس از برگشت شبکه
+- بکاپ روزانهٔ JSON بدون رمزگذاری، نگهداری ۳۰ نسخه و بازیابی همراه با بکاپ ایمنی
 
-React frontend for [HospitalRun](http://hospitalrun.io/): free software for developing world hospitals.
+## روش کار شبکه
 
----
+هر کامپیوتر دیتابیس محلی خودش را دارد. کامپیوتر اصلی فقط تغییرات این دیتابیس‌های
+محلی را در شبکهٔ مطب با هم هماهنگ می‌کند؛ بنابراین قطع اینترنت، مودم یا کامپیوتر
+اصلی فرم‌ها و پرونده‌های موجود روی هر سیستم را از کار نمی‌اندازد.
 
-# Are you a user? If yes...
+برای راه‌اندازی مطب چندسیستمی:
 
-[Visit this page for general information on the HospitalRun application](https://github.com/HospitalRun/hospitalrun/blob/master/README.md) including:
+1. روی کامپیوتر اصلی، از «تنظیمات ← شبکهٔ داخلی مطب»، دکمهٔ «آماده‌سازی خودکار
+   کامپیوتر اصلی» را بزنید و پنجرهٔ دسترسی مدیر ویندوز را تأیید کنید.
+2. فایل اتصال را از همان صفحه ذخیره کنید.
+3. RunCDX را روی کامپیوترهای دیگر نصب کنید، در راه‌اندازی اولیه «اتصال این سیستم به
+   مطب موجود» را بزنید و فایل اتصال را انتخاب کنید.
+4. پس از واردکردن فایل در همهٔ سیستم‌ها، فایل اتصال را حذف یا فقط نزد مدیر نگه دارید؛
+   چون رمز شبکهٔ داخلی داخل آن قرار دارد.
 
-- How can I deploy 1.0.0-beta?
-- Where do I report a bug or request a feature?
-- How can I contribute? (There are several other ways besides coding)
-- What is the project structure?
-- What is the application infrastructure?
-- Who is behind HospitalRun? etc.
+هیچ مدل خاصی از مودم لازم نیست. کامپیوترها فقط باید به یک Wi-Fi یا شبکهٔ کابلی واحد
+وصل باشند و شبکه در ویندوز روی حالت Private قرار بگیرد.
 
-# Would you like to contribute? If yes...
+## بکاپ و بازیابی
 
-[Get started by checking out the Frontend Contributing Guide](https://github.com/HospitalRun/hospitalrun-frontend/blob/master/.github/CONTRIBUTING.md) for:
-- What's the tech stack?
-- Where can I become familiar with the technologies?
-- Where do I browse issues?
-- How do I set up my local environment?
-- How do I run tests locally?
-- How do I submit my changes?
-- etc.
+RunCDX هر ۲۴ ساعت که برنامه باز باشد یک فایل خوانا در پوشهٔ `RunCDX Backups` داخل
+Documents ویندوز می‌سازد. ۳۰ نسخهٔ آخر نگه داشته می‌شود. مدیر می‌تواند از تنظیمات
+بکاپ فوری بسازد، پوشه را باز کند یا یک فایل معتبر را بازیابی کند. پیش از بازیابی،
+برنامه خودکار یک نسخهٔ ایمنی از وضعیت فعلی می‌سازد.
 
-# License
+طبق تصمیم این پروژه، فایل بکاپ رمزگذاری نمی‌شود. پس دسترسی پوشهٔ بکاپ باید محدود به
+افراد مجاز مطب باشد.
 
-Released under the [MIT license](LICENSE).
+## ساخت و آزمون توسعه‌دهندگان
+
+برای ساخت برنامه از Node.js 22 استفاده کنید. نسخه‌های جدیدتر Node ممکن است با ابزار
+قدیمی ساخت رابط HospitalRun ناسازگار باشند.
+
+```bash
+npm ci --legacy-peer-deps
+npm run translation:check
+npm run lint -- --quiet
+npm run test:ci -- --watchAll=false
+npm run build
+```
+
+ساخت نصب‌کنندهٔ ۶۴بیتی ویندوز:
+
+```bash
+npm run dist:win
+```
+
+Workflow فایل `.github/workflows/windows-installer.yml` همین مراحل را روی Windows
+واقعی اجرا می‌کند، برنامهٔ بسته‌بندی‌شده را Smoke Test می‌کند، SHA-256 می‌سازد و در
+اجرای دستی Artifact و برای تگ‌های `v*` یک GitHub Release دائمی منتشر می‌کند.
+
+## پروژهٔ مبنا و مجوز
+
+این پروژه بر پایهٔ
+[HospitalRun Frontend](https://github.com/HospitalRun/hospitalrun-frontend) توسعه
+یافته و تحت [مجوز MIT](LICENSE) منتشر می‌شود. حقوق و نام مشارکت‌کنندگان اصلی در
+تاریخچه و فایل مجوز حفظ شده است.

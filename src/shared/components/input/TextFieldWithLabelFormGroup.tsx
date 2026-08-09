@@ -17,7 +17,14 @@ const TextFieldWithLabelFormGroup = (props: Props) => {
   const inputId = `${name}TextField`
   return (
     <div className="form-group">
-      {label && <Label text={label} htmlFor={inputId} isRequired={isRequired} />}
+      {label && (
+        <Label
+          text={label}
+          htmlFor={inputId}
+          isRequired={isRequired}
+          title={isRequired ? 'این فیلد الزامی است' : undefined}
+        />
+      )}
       <TextField
         id={inputId}
         rows={4}

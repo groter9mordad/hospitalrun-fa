@@ -1,7 +1,8 @@
-import { Select, Typeahead, Label, Alert } from '@hospitalrun/components'
+import { Typeahead, Label, Alert } from '@hospitalrun/components'
 import React from 'react'
 
 import DateTimePickerWithLabelFormGroup from '../../shared/components/input/DateTimePickerWithLabelFormGroup'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
@@ -46,6 +47,7 @@ const AppointmentDetailForm = (props: Props) => {
               htmlFor="patientTypeahead"
               isRequired
               text={t('scheduling.appointment.patient')}
+              title="این فیلد الزامی است"
             />
             <Typeahead
               id="patientTypeahead"

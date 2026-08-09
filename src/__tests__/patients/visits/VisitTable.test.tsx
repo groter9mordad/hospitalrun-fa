@@ -1,6 +1,5 @@
 import { screen, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Router } from 'react-router-dom'
@@ -9,6 +8,7 @@ import VisitTable from '../../../patients/visits/VisitTable'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import Patient from '../../../shared/model/Patient'
 import Visit, { VisitStatus } from '../../../shared/model/Visit'
+import format from '../../../shared/util/formatDate'
 
 const visit: Visit = {
   id: 'id',
@@ -69,7 +69,9 @@ describe('Visit Table', () => {
     expect(screen.getByRole('cell', { name: formatter(visit.startDateTime) })).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: formatter(visit.endDateTime) })).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: visit.type })).toBeInTheDocument()
-    expect(screen.getByRole('cell', { name: visit.status })).toBeInTheDocument()
+    expect(
+      screen.getByRole('cell', { name: `patient.visits.statusOptions.${visit.status}` }),
+    ).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: visit.reason })).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: visit.location })).toBeInTheDocument()
   })

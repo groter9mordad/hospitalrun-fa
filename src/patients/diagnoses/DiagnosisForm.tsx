@@ -1,8 +1,9 @@
-import { Select, Label, Alert, Row, Column } from '@hospitalrun/components'
+import { Label, Alert, Row, Column } from '@hospitalrun/components'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Input from '../../shared/components/input'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import Diagnosis, { DiagnosisStatus } from '../../shared/model/Diagnosis'
 import Patient from '../../shared/model/Patient'

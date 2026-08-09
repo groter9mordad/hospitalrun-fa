@@ -1,16 +1,21 @@
 import { Spinner, Table, Dropdown } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router'
 
 import useTranslator from '../../shared/hooks/useTranslator'
 import { DownloadLink, getCSV } from '../../shared/util/DataHelpers'
 import { extractUsername } from '../../shared/util/extractUsername'
+import format from '../../shared/util/formatDate'
 import useIncidents from '../hooks/useIncidents'
 import IncidentSearchRequest from '../model/IncidentSearchRequest'
 
 interface Props {
   searchRequest: IncidentSearchRequest
+}
+
+const incidentStatusLabels: Record<string, string> = {
+  reported: 'گزارش‌شده',
+  resolved: 'حل‌شده',
 }
 
 export function populateExportData(dataToPopulate: any, theData: any) {
@@ -22,7 +27,7 @@ export function populateExportData(dataToPopulate: any, theData: any) {
         date: format(new Date(elm.date), 'yyyy-MM-dd hh:mm a'),
         reportedBy: elm.reportedBy,
         reportedOn: format(new Date(elm.reportedOn), 'yyyy-MM-dd hh:mm a'),
-        status: elm.status,
+        status: incidentStatusLabels[elm.status] || elm.status,
       }
       if (first) {
         dataToPopulate[0] = entry
@@ -112,6 +117,7 @@ function ViewIncidentsTable(props: Props) {
           {
             label: t('incidents.reports.status'),
             key: 'status',
+            formatter: (row) => t(`incidents.status.${row.status}`),
           },
         ]}
         actionsHeaderText={t('actions.label')}

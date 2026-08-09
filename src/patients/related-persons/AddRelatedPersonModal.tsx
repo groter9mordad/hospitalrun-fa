@@ -1,10 +1,10 @@
 import { Modal, Alert, Typeahead, Label } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React, { useState } from 'react'
 
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Patient from '../../shared/model/Patient'
+import format from '../../shared/util/formatDate'
 import useAddPatientRelatedPerson from '../hooks/useAddPatientRelatedPerson'
 import usePatients from '../hooks/usePatients'
 import { RelatedPersonError } from '../util/validate-related-person'
@@ -83,7 +83,12 @@ const AddRelatedPersonModal = (props: Props) => {
       <div className="row">
         <div className="col-md-12">
           <div className="form-group">
-            <Label text={t('patient.relatedPerson')} htmlFor="relatedPersonTypeAhead" isRequired />
+            <Label
+              text={t('patient.relatedPerson')}
+              htmlFor="relatedPersonTypeAhead"
+              isRequired
+              title="این فیلد الزامی است"
+            />
             <Typeahead
               id="relatedPersonTypeAhead"
               searchAccessor="fullName"

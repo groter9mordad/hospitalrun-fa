@@ -1,10 +1,10 @@
 import { Alert, Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import useTranslator from '../../shared/hooks/useTranslator'
 import { HistoryRecordType, PatientHistoryRecord } from '../../shared/model/PatientHistoryRecord'
+import format from '../../shared/util/formatDate'
 import usePatientAppointments from '../hooks/usePatientAppointments'
 import usePatientLabs from '../hooks/usePatientLabs'
 import { mapHistoryRecords } from './mappers/HistoryRecordsMapper'
@@ -51,6 +51,12 @@ const HistoryTable = ({ patientId }: Props) => {
         {
           label: t('patient.history.recordType'),
           key: 'type',
+          formatter: (row) =>
+            t(
+              row.type === HistoryRecordType.LAB
+                ? 'patient.history.recordTypes.lab'
+                : 'patient.history.recordTypes.appointment',
+            ),
         },
         {
           label: t('patient.history.information'),

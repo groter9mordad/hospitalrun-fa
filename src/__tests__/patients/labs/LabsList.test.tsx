@@ -88,21 +88,14 @@ describe('Table', () => {
     ).toBeInTheDocument()
   })
   it('should navigate to lab view on lab click', async () => {
-    let row: any
     await setup()
 
-    await waitFor(() => {
-      row = screen.getByRole('row', {
-        name: /blood type 2020-02-01 09:00 am actions\.view/i,
-      })
-    })
+    const row = (await screen.findByText('Blood type')).closest('tr') as HTMLElement
 
-    await waitFor(() =>
-      userEvent.click(
-        within(row).getByRole('button', {
-          name: /actions\.view/i,
-        }),
-      ),
+    userEvent.click(
+      within(row).getByRole('button', {
+        name: /actions\.view/i,
+      }),
     )
 
     expect(history.location.pathname).toEqual('/labs/456')

@@ -1,12 +1,13 @@
 import { Button, Table, Alert } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import useAddBreadcrumbs from '../../page-header/breadcrumbs/useAddBreadcrumbs'
+import { appointmentTypeTranslationKey } from '../../scheduling/appointments/util/appointmentTranslationKey'
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Patient from '../../shared/model/Patient'
+import format from '../../shared/util/formatDate'
 import usePatientsAppointments from '../hooks/usePatientAppointments'
 
 interface Props {
@@ -72,7 +73,11 @@ const AppointmentsList = ({ patient }: Props) => {
                     row.endDateTime ? format(new Date(row.endDateTime), 'yyyy-MM-dd, hh:mm a') : '',
                 },
                 { label: t('scheduling.appointment.location'), key: 'location' },
-                { label: t('scheduling.appointment.type'), key: 'type' },
+                {
+                  label: t('scheduling.appointment.type'),
+                  key: 'type',
+                  formatter: (row) => t(appointmentTypeTranslationKey(row.type)),
+                },
               ]}
               actionsHeaderText={t('actions.label')}
               actions={[

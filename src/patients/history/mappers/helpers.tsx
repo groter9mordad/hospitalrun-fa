@@ -1,3 +1,4 @@
+import i18n from '../../../shared/config/i18n'
 import Appointment from '../../../shared/model/Appointment'
 import Lab from '../../../shared/model/Lab'
 import { PatientHistoryRecord, HistoryRecordType } from '../../../shared/model/PatientHistoryRecord'
@@ -8,7 +9,7 @@ export const convertLab = (lab: Lab): PatientHistoryRecord[] => {
     labEvents.push({
       date: new Date(lab.requestedOn),
       type: HistoryRecordType.LAB,
-      info: `Requested - ${lab.type}`,
+      info: `${i18n.t('patient.history.events.labRequested')} - ${lab.type}`,
       recordId: lab.id,
       id: `requestedLab${lab.id}`,
     })
@@ -17,7 +18,7 @@ export const convertLab = (lab: Lab): PatientHistoryRecord[] => {
     labEvents.push({
       date: new Date(lab.canceledOn),
       type: HistoryRecordType.LAB,
-      info: `Canceled - ${lab.type}`,
+      info: `${i18n.t('patient.history.events.labCanceled')} - ${lab.type}`,
       recordId: lab.id,
       id: `canceledLab${lab.id}`,
     })
@@ -25,7 +26,7 @@ export const convertLab = (lab: Lab): PatientHistoryRecord[] => {
     labEvents.push({
       date: new Date(lab.completedOn),
       type: HistoryRecordType.LAB,
-      info: `Completed - ${lab.type}`,
+      info: `${i18n.t('patient.history.events.labCompleted')} - ${lab.type}`,
       recordId: lab.id,
       id: `completedLab${lab.id}`,
     })
@@ -39,7 +40,7 @@ export const convertAppointment = (appt: Appointment): PatientHistoryRecord[] =>
     apptEvents.push({
       date: new Date(appt.startDateTime),
       type: HistoryRecordType.APPOINTMENT,
-      info: `Started - ${appt.type}`,
+      info: `${i18n.t('patient.history.events.appointmentStarted')} - ${appt.type}`,
       recordId: appt.id,
       id: `startedAppt${appt.id}`,
     })
@@ -48,7 +49,7 @@ export const convertAppointment = (appt: Appointment): PatientHistoryRecord[] =>
     apptEvents.push({
       date: new Date(appt.endDateTime),
       type: HistoryRecordType.APPOINTMENT,
-      info: `Ended - ${appt.type}`,
+      info: `${i18n.t('patient.history.events.appointmentEnded')} - ${appt.type}`,
       recordId: appt.id,
       id: `endedAppt${appt.id}`,
     })

@@ -89,10 +89,10 @@ describe('Navbar', () => {
     })
 
     describe('header', () => {
-      it('should render a HospitalRun Navbar', () => {
+      it('should render a RunCDX Navbar', () => {
         setup(allPermissions)
 
-        expect(screen.getByText(/hospitalrun/i)).toBeInTheDocument()
+        expect(screen.getByText(/runcdx/i)).toBeInTheDocument()
         expect(screen.getByRole('button', { hidden: false })).toBeInTheDocument()
       })
 
@@ -101,7 +101,7 @@ describe('Navbar', () => {
 
         history.location.pathname = '/enterprise-1701'
         expect(history.location.pathname).not.toEqual('/')
-        userEvent.click(screen.getByText(/hospitalrun/i))
+        userEvent.click(screen.getByText(/runcdx/i))
 
         expect(history.location.pathname).toEqual('/')
       })
@@ -130,9 +130,7 @@ describe('Navbar', () => {
         const navButton = container.querySelector('.nav-account')?.firstElementChild as Element
         userEvent.click(navButton)
 
-        expect(
-          screen.getByText(/user\.login\.currentlysignedinas givenname familyname/i),
-        ).toBeInTheDocument()
+        expect(screen.getByText('givenName familyName')).toBeInTheDocument()
       })
 
       it('should render a setting link list', () => {

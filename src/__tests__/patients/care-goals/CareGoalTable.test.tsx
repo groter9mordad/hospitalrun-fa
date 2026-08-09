@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Router } from 'react-router-dom'
@@ -9,6 +8,7 @@ import CareGoalTable from '../../../patients/care-goals/CareGoalTable'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import CareGoal, { CareGoalStatus, CareGoalAchievementStatus } from '../../../shared/model/CareGoal'
 import Patient from '../../../shared/model/Patient'
+import format from '../../../shared/util/formatDate'
 
 describe('Care Goal Table', () => {
   const expectedDate = new Date().toISOString()
@@ -63,7 +63,9 @@ describe('Care Goal Table', () => {
     expect(screen.getByText(careGoal.description)).toBeInTheDocument()
     // startDate and dueDate are both rendered with expectedDate
     expect(dates).toHaveLength(2)
-    expect(screen.getByText(careGoal.status)).toBeInTheDocument()
+    expect(
+      screen.getByText(`patient.careGoal.statusOptions.${careGoal.status}`),
+    ).toBeInTheDocument()
   })
 
   it('should navigate to the care goal view when the view details button is clicked', async () => {

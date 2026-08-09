@@ -1,10 +1,10 @@
 import { Alert, Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
+import format from '../../shared/util/formatDate'
 import usePatientVisits from '../hooks/usePatientVisits'
 
 interface Props {
@@ -46,7 +46,11 @@ const VisitTable = ({ patientId }: Props) => {
           formatter: (row) => format(new Date(row.endDateTime), 'yyyy-MM-dd hh:mm a'),
         },
         { label: t('patient.visits.type'), key: 'type' },
-        { label: t('patient.visits.status'), key: 'status' },
+        {
+          label: t('patient.visits.status'),
+          key: 'status',
+          formatter: (row) => t(`patient.visits.statusOptions.${row.status}`),
+        },
         { label: t('patient.visits.reason'), key: 'reason' },
         { label: t('patient.visits.location'), key: 'location' },
       ]}

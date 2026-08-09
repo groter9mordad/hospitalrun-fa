@@ -1,11 +1,11 @@
 import { Alert, Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
 import Patient from '../../shared/model/Patient'
+import format from '../../shared/util/formatDate'
 import usePatientLabs from '../hooks/usePatientLabs'
 
 interface Props {

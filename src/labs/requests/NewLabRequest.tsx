@@ -1,19 +1,11 @@
-import {
-  Select,
-  Typeahead,
-  Label,
-  Button,
-  Alert,
-  Toast,
-  Column,
-  Row,
-} from '@hospitalrun/components'
+import { Typeahead, Label, Button, Alert, Toast, Column, Row } from '@hospitalrun/components'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import useAddBreadcrumbs from '../../page-header/breadcrumbs/useAddBreadcrumbs'
 import { useUpdateTitle } from '../../page-header/title/TitleContext'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
@@ -148,7 +140,12 @@ const NewLabRequest = () => {
         <Row>
           <Column>
             <div className="form-group patient-typeahead">
-              <Label htmlFor="patientTypeahead" isRequired text={t('labs.lab.patient')} />
+              <Label
+                htmlFor="patientTypeahead"
+                isRequired
+                text={t('labs.lab.patient')}
+                title="این فیلد الزامی است"
+              />
               <Typeahead
                 id="patientTypeahead"
                 placeholder={t('labs.lab.patient')}

@@ -1,6 +1,6 @@
 {
-  "short_name": "HospitalRun",
-  "name": "HospitalRun",
+  "short_name": "RunCDX",
+  "name": "RunCDX - سامانه مدیریت درمانگاه",
   "icons": [
     {
       "src": "favicon.ico",

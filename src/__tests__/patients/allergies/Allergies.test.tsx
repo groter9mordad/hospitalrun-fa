@@ -100,7 +100,7 @@ describe('Allergies', () => {
       )
       userEvent.type(
         screen.getByRole('textbox', {
-          name: /this is a required input/i,
+          name: /patient\.allergies\.allergyname/i,
         }),
         newAllergy,
       )

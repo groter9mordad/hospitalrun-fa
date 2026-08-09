@@ -80,7 +80,7 @@ describe('New Appointment', () => {
     it('should render an Appointment Detail Component', async () => {
       setup()
 
-      expect(await screen.findByLabelText('new appointment form')).toBeInTheDocument()
+      expect(await screen.findByLabelText('فرم نوبت جدید')).toBeInTheDocument()
     })
   })
 
@@ -196,7 +196,7 @@ describe('New Appointment', () => {
       )
 
       userEvent.type(
-        screen.getByPlaceholderText('-- Choose --'),
+        screen.getByPlaceholderText('انتخاب کنید'),
         `${expectedAppointment.type}{arrowdown}{enter}`,
       )
 

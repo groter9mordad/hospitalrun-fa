@@ -6,10 +6,13 @@ import thunk from 'redux-thunk'
 
 import App from '../App'
 import { RootState } from '../shared/store'
+import { hasLocalUsers } from '../user/local-auth'
+
+jest.mock('../user/local-auth')
 
 const mockStore = createMockStore<RootState, any>([thunk])
 
-it('renders without crashing', async () => {
+it('shows the administrator setup on the first launch', async () => {
   // Supress the console.log in the test ouput
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   jest.spyOn(console, 'log').mockImplementation(() => {})
@@ -26,15 +29,17 @@ it('renders without crashing', async () => {
     },
   } as any)
 
+  const mockedHasLocalUsers = hasLocalUsers as jest.MockedFunction<typeof hasLocalUsers>
+  mockedHasLocalUsers.mockResolvedValue(false)
+
   render(
     <Provider store={store}>
       <App />
     </Provider>,
   )
 
-  expect(
-    await screen.findByRole('heading', { name: /dashboard\.label/i }, { timeout: 8000 }),
-  ).toBeInTheDocument()
+  expect(await screen.findByRole('heading', { name: 'راه‌اندازی اولیه' })).toBeInTheDocument()
+  expect(screen.getByLabelText('نام کاربری مدیر')).toHaveValue('admin')
 
   // eslint-disable-next-line no-console
   ;(console.log as jest.Mock).mockRestore()

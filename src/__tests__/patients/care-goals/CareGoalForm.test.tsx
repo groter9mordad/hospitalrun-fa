@@ -1,11 +1,11 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent, { specialChars } from '@testing-library/user-event'
 import addMonths from 'date-fns/addMonths'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import CareGoalForm from '../../../patients/care-goals/CareGoalForm'
 import CareGoal, { CareGoalStatus, CareGoalAchievementStatus } from '../../../shared/model/CareGoal'
+import format, { toPersianDigits } from '../../../shared/util/formatDate'
 
 const { arrowDown, enter } = specialChars
 
@@ -105,16 +105,18 @@ describe('Care Goal Form', () => {
 
     const status = within(screen.getByTestId('statusSelect')).getByRole('combobox')
     expect(status).toBeInTheDocument()
-    expect(status).toHaveValue(careGoal.status)
+    expect(status).toHaveValue(`patient.careGoal.statusOptions.${careGoal.status}`)
 
     userEvent.click(status) // display popup with the options
     Object.values(CareGoalStatus).forEach((value) =>
-      expect(screen.getByText(value)).toBeInTheDocument(),
+      expect(screen.getByText(`patient.careGoal.statusOptions.${value}`)).toBeInTheDocument(),
     )
 
-    userEvent.click(screen.getByText(CareGoalStatus.Proposed))
-    expect(status).toHaveValue(CareGoalStatus.Proposed)
-    expect(screen.queryByText(CareGoalStatus.Accepted)).not.toBeInTheDocument()
+    userEvent.click(screen.getByText(`patient.careGoal.statusOptions.${CareGoalStatus.Proposed}`))
+    expect(status).toHaveValue(`patient.careGoal.statusOptions.${CareGoalStatus.Proposed}`)
+    expect(
+      screen.queryByText(`patient.careGoal.statusOptions.${CareGoalStatus.Accepted}`),
+    ).not.toBeInTheDocument()
   })
 
   it('should call onChange handler when status changes', () => {
@@ -136,7 +138,9 @@ describe('Care Goal Form', () => {
       'combobox',
     )
     expect(achievementStatus).toBeInTheDocument()
-    expect(achievementStatus).toHaveValue(careGoal.achievementStatus)
+    expect(achievementStatus).toHaveValue(
+      `patient.careGoal.achievementStatusOptions.${careGoal.achievementStatus}`,
+    )
   })
 
   it('should call onChange handler when achievement status change', () => {
@@ -157,7 +161,7 @@ describe('Care Goal Form', () => {
     expect(screen.getByText(/patient.careGoal.startDate/i)).toBeInTheDocument()
     const startDatePicker = within(screen.getByTestId('startDateDatePicker')).getByRole('textbox')
     expect(startDatePicker).toBeInTheDocument()
-    expect(startDatePicker).toHaveValue(format(startDate, 'MM/dd/y'))
+    expect(startDatePicker).toHaveValue(format(startDate, 'yyyy/MM/dd'))
   })
 
   it('should call onChange handler when start date change', () => {
@@ -167,7 +171,7 @@ describe('Care Goal Form', () => {
     const startDatePicker = within(screen.getByTestId('startDateDatePicker')).getByRole('textbox')
     userEvent.type(startDatePicker, `{selectall}${expectedDate}{enter}`)
     expect(onCareGoalChangeSpy).toHaveBeenCalled()
-    expect(startDatePicker).toHaveDisplayValue(expectedDate)
+    expect(startDatePicker).toHaveDisplayValue(toPersianDigits(expectedDate))
   })
 
   it('should render a due date picker', () => {
@@ -176,7 +180,7 @@ describe('Care Goal Form', () => {
     expect(screen.getByText(/patient.careGoal.dueDate/i)).toBeInTheDocument()
     const dueDatePicker = within(screen.getByTestId('dueDateDatePicker')).getByRole('textbox')
     expect(dueDatePicker).toBeInTheDocument()
-    expect(dueDatePicker).toHaveValue(format(dueDate, 'MM/dd/y'))
+    expect(dueDatePicker).toHaveValue(format(dueDate, 'yyyy/MM/dd'))
   })
 
   it('should call onChange handler when due date changes', () => {
@@ -186,7 +190,7 @@ describe('Care Goal Form', () => {
     const dueDatePicker = within(screen.getByTestId('dueDateDatePicker')).getByRole('textbox')
     userEvent.type(dueDatePicker, `{selectall}${expectedDate}{enter}`)
     expect(onCareGoalChangeSpy).toHaveBeenCalled()
-    expect(dueDatePicker).toHaveDisplayValue(expectedDate)
+    expect(dueDatePicker).toHaveDisplayValue(toPersianDigits(expectedDate))
   })
 
   it('should render a note input', () => {
@@ -251,7 +255,7 @@ describe('Care Goal Form', () => {
 
     const alert = await screen.findByRole('alert')
     const descriptionInput = screen.getByRole('textbox', {
-      name: /this is a required input/i,
+      name: /patient\.caregoal\.description/i,
     })
     const priority = within(screen.getByTestId('prioritySelect')).getByRole('combobox')
     const status = within(screen.getByTestId('statusSelect')).getByRole('combobox')

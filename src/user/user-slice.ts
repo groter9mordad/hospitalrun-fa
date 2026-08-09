@@ -1,10 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { remoteDb } from '../shared/config/pouchdb'
 import Permissions from '../shared/model/Permissions'
 import User from '../shared/model/User'
+import { UserRole } from '../shared/model/UserRole'
 import { AppThunk } from '../shared/store'
+import { authenticateLocalUser, getLocalUser } from './local-auth'
 
 export interface LoginError {
   message?: string
@@ -15,48 +16,13 @@ export interface LoginError {
 export interface UserState {
   permissions: (Permissions | null)[]
   user?: User
+  role?: UserRole
   loginError?: LoginError
 }
 
 const initialState: UserState = {
-  user: {
-    givenName: 'HospitalRun',
-    familyName: 'Test',
-    fullName: 'HospitalRun Test',
-    id: 'test-hospitalrun',
-  },
-  permissions: [
-    Permissions.ReadPatients,
-    Permissions.WritePatients,
-    Permissions.ReadAppointments,
-    Permissions.WriteAppointments,
-    Permissions.DeleteAppointment,
-    Permissions.AddAllergy,
-    Permissions.AddDiagnosis,
-    Permissions.ViewLabs,
-    Permissions.ViewLab,
-    Permissions.RequestLab,
-    Permissions.CompleteLab,
-    Permissions.CancelLab,
-    Permissions.ViewIncident,
-    Permissions.ViewIncidents,
-    Permissions.ReportIncident,
-    Permissions.ResolveIncident,
-    Permissions.ViewIncidentWidgets,
-    Permissions.AddCarePlan,
-    Permissions.ReadCarePlan,
-    Permissions.AddCareGoal,
-    Permissions.ReadCareGoal,
-    Permissions.RequestMedication,
-    Permissions.CompleteMedication,
-    Permissions.CancelMedication,
-    Permissions.ViewMedications,
-    Permissions.ViewMedication,
-    Permissions.AddVisit,
-    Permissions.ReadVisits,
-    Permissions.ViewImagings,
-    Permissions.RequestImaging,
-  ],
+  user: undefined,
+  permissions: [],
 }
 
 const userSlice = createSlice({
@@ -68,16 +34,25 @@ const userSlice = createSlice({
     },
     loginSuccess(
       state,
-      { payload }: PayloadAction<{ user: User; permissions: (Permissions | null)[] }>,
+      {
+        payload,
+      }: PayloadAction<{
+        user: User
+        role?: UserRole
+        permissions: (Permissions | null)[]
+      }>,
     ) {
       state.user = payload.user
-      state.permissions = initialState.permissions
+      state.role = payload.role
+      state.permissions = payload.permissions
+      state.loginError = undefined
     },
     loginError(state, { payload }: PayloadAction<LoginError>) {
       state.loginError = payload
     },
     logoutSuccess(state) {
       state.user = undefined
+      state.role = undefined
       state.permissions = []
     },
   },
@@ -86,33 +61,17 @@ const userSlice = createSlice({
 export const { fetchPermissions, loginError, loginSuccess, logoutSuccess } = userSlice.actions
 
 export const getCurrentSession = (username: string): AppThunk => async (dispatch) => {
-  const user = await remoteDb.getUser(username)
-  dispatch(
-    loginSuccess({
-      user: {
-        id: user._id,
-        givenName: (user as any).metadata.givenName,
-        familyName: (user as any).metadata.familyName,
-      },
-      permissions: initialState.permissions,
-    }),
-  )
+  const localUser = await getLocalUser(username)
+  dispatch(loginSuccess(localUser))
 }
 
 export const login = (username: string, password: string): AppThunk => async (dispatch) => {
   try {
-    const response = await remoteDb.logIn(username, password)
-    const user = await remoteDb.getUser(response.name)
-    dispatch(
-      loginSuccess({
-        user: {
-          id: user._id,
-          givenName: (user as any).metadata.givenName,
-          familyName: (user as any).metadata.familyName,
-        },
-        permissions: initialState.permissions,
-      }),
-    )
+    if (!username || !password) {
+      throw new Error('REQUIRED')
+    }
+    const localUser = await authenticateLocalUser(username, password)
+    dispatch(loginSuccess(localUser))
   } catch (error) {
     if (!username || !password) {
       dispatch(
@@ -122,7 +81,7 @@ export const login = (username: string, password: string): AppThunk => async (di
           password: 'user.login.error.password.required',
         }),
       )
-    } else if (error.status === 401) {
+    } else {
       dispatch(
         loginError({
           message: 'user.login.error.message.incorrect',
@@ -133,7 +92,6 @@ export const login = (username: string, password: string): AppThunk => async (di
 }
 
 export const logout = (): AppThunk => async (dispatch) => {
-  await remoteDb.logOut()
   dispatch(logoutSuccess())
 }
 

@@ -1,12 +1,12 @@
 import isEmpty from 'lodash/isEmpty'
 import { queryCache, useMutation } from 'react-query'
-import shortid from 'shortid'
 
 import IncidentRepository from '../../shared/db/IncidentRepository'
 import Incident from '../../shared/model/Incident'
+import generateCode from '../../shared/util/generateCode'
 import validateIncident from '../util/validate-incident'
 
-const getIncidentCode = (): string => `I-${shortid.generate()}`
+const getIncidentCode = (): string => generateCode('I')
 
 export function reportIncident(incident: Incident): Promise<Incident> {
   const error = validateIncident(incident)

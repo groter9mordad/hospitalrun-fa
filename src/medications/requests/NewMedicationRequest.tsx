@@ -1,4 +1,4 @@
-import { Select, Typeahead, Label, Button, Alert, Column, Row } from '@hospitalrun/components'
+import { Typeahead, Label, Button, Alert, Column, Row } from '@hospitalrun/components'
 import { set } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 
 import useAddBreadcrumbs from '../../page-header/breadcrumbs/useAddBreadcrumbs'
 import { useUpdateTitle } from '../../page-header/title/TitleContext'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
@@ -30,9 +31,9 @@ const NewMedicationRequest = () => {
     patient: '',
     medication: '',
     notes: '',
-    status: '',
+    status: 'draft',
     intent: 'order',
-    priority: '',
+    priority: 'routine',
     quantity: { value: ('' as unknown) as number, unit: '' },
   } as unknown) as Medication)
 
@@ -131,7 +132,12 @@ const NewMedicationRequest = () => {
       )}
       <form aria-label="فرم درخواست دارو">
         <div className="form-group patient-typeahead">
-          <Label htmlFor="patientTypeahead" isRequired text={t('medications.medication.patient')} />
+          <Label
+            htmlFor="patientTypeahead"
+            isRequired
+            text={t('medications.medication.patient')}
+            title="این فیلد الزامی است"
+          />
           <Typeahead
             id="patientTypeahead"
             placeholder={t('medications.medication.patient')}
@@ -153,11 +159,7 @@ const NewMedicationRequest = () => {
           onChange={onMedicationChange}
         />
         <div className="form-group" data-testid="statusSelect">
-          <Label
-            text={t('medications.medication.status')}
-            title={t('medications.medication.status')}
-            isRequired
-          />
+          <Label text={t('medications.medication.status')} title="این فیلد الزامی است" isRequired />
           <Select
             id="statusSelect"
             options={statusOptionsNew}
@@ -169,11 +171,7 @@ const NewMedicationRequest = () => {
           />
         </div>
         <div className="form-group" data-testid="intentSelect">
-          <Label
-            text={t('medications.medication.intent')}
-            title={t('medications.medication.intent')}
-            isRequired
-          />
+          <Label text={t('medications.medication.intent')} title="این فیلد الزامی است" isRequired />
           <Select
             id="intentSelect"
             options={intentOptions}
@@ -187,7 +185,7 @@ const NewMedicationRequest = () => {
         <div className="form-group" data-testid="prioritySelect">
           <Label
             text={t('medications.medication.priority')}
-            title={t('medications.medication.priority')}
+            title="این فیلد الزامی است"
             isRequired
           />
           <Select

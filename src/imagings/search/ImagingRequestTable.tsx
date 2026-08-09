@@ -1,10 +1,10 @@
 import { Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
 import { extractUsername } from '../../shared/util/extractUsername'
+import format from '../../shared/util/formatDate'
 import useImagingSearch from '../hooks/useImagingSearch'
 import ImagingSearchRequest from '../model/ImagingSearchRequest'
 
@@ -39,7 +39,11 @@ const ImagingRequestTable = (props: Props) => {
           key: 'requestedBy',
           formatter: (row) => extractUsername(row.requestedByFullName || ''),
         },
-        { label: t('imagings.imaging.status'), key: 'status' },
+        {
+          label: t('imagings.imaging.status'),
+          key: 'status',
+          formatter: (row) => t(`imagings.status.${row.status}`),
+        },
       ]}
       data={data}
     />

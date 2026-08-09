@@ -101,7 +101,7 @@ const ImportantPatientInfo = (props: Props) => {
         <div className="col-2">
           <div style={headerInfoStyle} className="patient-sex">
             <strong>{t('patient.sex')}</strong>
-            <h6>{patient.sex}</h6>
+            <h6>{t(`sex.${patient.sex}`)}</h6>
           </div>
         </div>
         <div className="col-2">

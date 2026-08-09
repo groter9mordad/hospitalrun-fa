@@ -1,5 +1,4 @@
 import { Button, Column, Row, Spinner } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router'
 
@@ -9,6 +8,7 @@ import TextInputWithLabelFormGroup from '../../shared/components/input/TextInput
 import useTranslator from '../../shared/hooks/useTranslator'
 import Permissions from '../../shared/model/Permissions'
 import { extractUsername } from '../../shared/util/extractUsername'
+import format from '../../shared/util/formatDate'
 import useIncident from '../hooks/useIncident'
 import useResolveIncident from '../hooks/useResolveIncident'
 
@@ -77,7 +77,7 @@ function ViewIncidentDetails(props: Props) {
         <Column>
           <div className="form-group incident-status">
             <h4>{t('incidents.reports.status')}</h4>
-            <h5>{data.status}</h5>
+            <h5>{t(`incidents.status.${data.status}`)}</h5>
           </div>
         </Column>
         <Column>

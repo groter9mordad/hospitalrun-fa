@@ -30,7 +30,14 @@ const TextInputWithLabelFormGroup = (props: Props) => {
   const id = `${name}TextInput`
   return (
     <div className="form-group">
-      {label && <Label text={label} htmlFor={id} isRequired={isRequired} />}
+      {label && (
+        <Label
+          text={label}
+          htmlFor={id}
+          isRequired={isRequired}
+          title={isRequired ? 'این فیلد الزامی است' : undefined}
+        />
+      )}
       <TextInput
         feedback={feedback}
         id={id}

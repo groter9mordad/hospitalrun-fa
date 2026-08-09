@@ -3,41 +3,40 @@ name: GitHub CI
 on:
   push:
     branches:
-      - "!master"
+      - "**"
   pull_request:
     branches:
       - master
 
+permissions:
+  contents: read
 
 jobs:
-  npm:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [14.x]
-        os: [ubuntu-latest]
-        # os: [ubuntu-latest, windows-latest, macOS-latest]
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
-      - run: git config --global core.autocrlf false # this is needed to prevent git changing EOL after cloning on Windows OS
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install with npm
-        run: |
-          npm install
-      - name: Lint code
-        run: |
-          npm run lint
-      - name: Build
-        run: |
-          npm run build
-      - name: Run tests
-        run: |
-          npm run coveralls
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./coverage/lcov.info
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check Persian translations
+        run: npm run translation:check
+
+      - name: Lint source
+        run: npm run lint -- --quiet
+
+      - name: Build production application
+        run: npm run build
+
+      - name: Run all tests
+        run: npm run test:ci -- --watchAll=false

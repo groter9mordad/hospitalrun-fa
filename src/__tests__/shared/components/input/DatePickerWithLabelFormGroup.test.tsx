@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 
 import DatePickerWithLabelFormGroup from '../../../../shared/components/input/DatePickerWithLabelFormGroup'
+import format from '../../../../shared/util/formatDate'
 
 describe('date picker with label form group', () => {
   describe('layout', () => {
@@ -21,7 +22,9 @@ describe('date picker with label form group', () => {
       const name = screen.getByText(/stardate/i)
       expect(name).toHaveAttribute('for', `${expectedName}DatePicker`)
       expect(name).toHaveTextContent(expectedName)
-      expect(screen.getByRole('textbox')).toHaveDisplayValue(['12/25/2020'])
+      expect(screen.getByRole('textbox')).toHaveDisplayValue([
+        format(new Date('12/25/2020'), 'yyyy/MM/dd'),
+      ])
     })
     it('should render disabled is isDisable disabled is true', () => {
       render(
@@ -54,9 +57,10 @@ describe('date picker with label form group', () => {
       render(<TestComponent />)
       const datepickerInput = screen.getByRole('textbox')
 
-      expect(datepickerInput).toHaveDisplayValue(['01/01/2019'])
-      userEvent.type(datepickerInput, '{selectall}12/25/2021{enter}')
-      expect(datepickerInput).toHaveDisplayValue(['12/25/2021'])
+      expect(datepickerInput).toHaveDisplayValue([format(new Date('01/01/2019'), 'yyyy/MM/dd')])
+      const expectedNewDate = format(new Date('12/25/2021'), 'yyyy/MM/dd')
+      userEvent.type(datepickerInput, `{selectall}${expectedNewDate}{enter}`)
+      expect(datepickerInput).toHaveDisplayValue([expectedNewDate])
     })
   })
 })

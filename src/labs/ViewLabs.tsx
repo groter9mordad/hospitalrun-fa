@@ -1,10 +1,11 @@
-import { Select, Label, Button, Table, Container, Row, Column } from '@hospitalrun/components'
+import { Label, Button, Table, Container, Row, Column } from '@hospitalrun/components'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { useButtonToolbarSetter } from '../page-header/button-toolbar/ButtonBarProvider'
 import { useUpdateTitle } from '../page-header/title/TitleContext'
+import Select from '../shared/components/input/PersianSelect'
 import { SelectOption } from '../shared/components/input/SelectOption'
 import TextInputWithLabelFormGroup from '../shared/components/input/TextInputWithLabelFormGroup'
 import useDebounce from '../shared/hooks/useDebounce'
@@ -111,7 +112,11 @@ const ViewLabs = () => {
               formatter: (row) =>
                 row.requestedOn ? format(new Date(row.requestedOn), 'yyyy-MM-dd hh:mm a') : '',
             },
-            { label: t('labs.lab.status'), key: 'status' },
+            {
+              label: t('labs.lab.status'),
+              key: 'status',
+              formatter: (row) => t(`labs.status.${row.status}`),
+            },
           ]}
           data={labs || []}
           actionsHeaderText={t('actions.label')}

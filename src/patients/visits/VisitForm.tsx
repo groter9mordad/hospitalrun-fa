@@ -1,7 +1,8 @@
-import { Select, Label, Alert, Column, Row } from '@hospitalrun/components'
+import { Label, Alert, Column, Row } from '@hospitalrun/components'
 import React, { useState } from 'react'
 
 import DateTimePickerWithLabelFormGroup from '../../shared/components/input/DateTimePickerWithLabelFormGroup'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
@@ -48,7 +49,7 @@ const VisitForm = (props: Props) => {
     })) || []
 
   return (
-    <form aria-label="فرم مراجعه">
+    <form aria-label="فرم ویزیت">
       {visitError?.message && <Alert color="danger" message={t(visitError.message)} />}
       <Row>
         <Column sm={6}>
@@ -92,7 +93,7 @@ const VisitForm = (props: Props) => {
       </Row>
       <Row>
         <Column sm={12}>
-          <Label text={t('patient.visits.status')} title={t('patient.visits.status')} isRequired />
+          <Label text={t('patient.visits.status')} title="این فیلد الزامی است" isRequired />
           <Select
             id="status"
             options={statusOptions}

@@ -1,10 +1,10 @@
 import { Alert, Table } from '@hospitalrun/components'
-import format from '../../shared/util/formatDate'
 import React from 'react'
 import { useHistory } from 'react-router'
 
 import Loading from '../../shared/components/Loading'
 import useTranslator from '../../shared/hooks/useTranslator'
+import format from '../../shared/util/formatDate'
 import usePatientCareGoals from '../hooks/usePatientCareGoals'
 
 interface Props {
@@ -50,6 +50,7 @@ const CareGoalTable = (props: Props) => {
         {
           label: t('patient.careGoal.status'),
           key: 'status',
+          formatter: (row) => t(`patient.careGoal.statusOptions.${row.status}`),
         },
       ]}
       actionsHeaderText={t('actions.label')}

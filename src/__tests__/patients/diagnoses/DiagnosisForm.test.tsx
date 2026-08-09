@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import DiagnosisForm from '../../../patients/diagnoses/DiagnosisForm'
@@ -8,6 +7,7 @@ import PatientRepository from '../../../shared/db/PatientRepository'
 import Diagnosis, { DiagnosisStatus } from '../../../shared/model/Diagnosis'
 import Patient from '../../../shared/model/Patient'
 import Visit from '../../../shared/model/Visit'
+import format from '../../../shared/util/formatDate'
 
 describe('Diagnosis Form', () => {
   let onDiagnosisChangeSpy: any
@@ -65,7 +65,7 @@ describe('Diagnosis Form', () => {
     const nameInputLabel = screen.getByText(/patient.diagnoses.diagnosisName/i)
     expect(nameInput).toBeInTheDocument()
     expect(nameInput).toHaveDisplayValue(diagnosis.name)
-    expect(nameInputLabel.title).toBe('This is a required input')
+    expect(nameInputLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when name changes', () => {
@@ -83,7 +83,7 @@ describe('Diagnosis Form', () => {
     expect(visitSelector).toBeInTheDocument()
     expect(visitSelector).toHaveDisplayValue('')
     expect(visitSelectorLabel).toBeInTheDocument()
-    expect(visitSelectorLabel.title).not.toBe('This is a required input')
+    expect(visitSelectorLabel.title).not.toBe('این فیلد الزامی است')
   })
 
   // it.only('should call the on change handler when visit changes', () => {
@@ -105,15 +105,17 @@ describe('Diagnosis Form', () => {
     const statusSelector = within(screen.getByTestId('statusSelect')).getByRole('combobox')
     const statusSelectorLabel = screen.getByText(/patient.diagnoses.status/i)
     expect(statusSelector).toBeInTheDocument()
-    expect(statusSelector).toHaveValue(diagnosis.status)
+    expect(statusSelector).toHaveValue(`patient.diagnoses.statusOptions.${diagnosis.status}`)
     expect(statusSelectorLabel).toBeInTheDocument()
-    expect(statusSelectorLabel.title).toBe('This is a required input')
+    expect(statusSelectorLabel.title).toBe('این فیلد الزامی است')
     userEvent.click(statusSelector)
     const optionsList = screen
       .getAllByRole('listbox')
       .filter((item) => item.id === 'statusSelect')[0]
     const options = Array.prototype.map.call(optionsList.children, (li) => li.textContent)
-    expect(options).toEqual(Object.values(DiagnosisStatus).map((v) => v))
+    expect(options).toEqual(
+      Object.values(DiagnosisStatus).map((v) => `patient.diagnoses.statusOptions.${v}`),
+    )
   })
 
   it('should call the on change handler when status changes', () => {
@@ -121,7 +123,7 @@ describe('Diagnosis Form', () => {
     setup(false, false)
     const statusSelector = within(screen.getByTestId('statusSelect')).getByRole('combobox')
     userEvent.click(statusSelector)
-    userEvent.click(screen.getByText(expectedNewStatus))
+    userEvent.click(screen.getByText(`patient.diagnoses.statusOptions.${expectedNewStatus}`))
     expect(onDiagnosisChangeSpy).toHaveBeenCalledWith({ status: expectedNewStatus })
   })
 
@@ -133,7 +135,7 @@ describe('Diagnosis Form', () => {
     const diagnosisDatePickerLabel = screen.getByText(/patient.diagnoses.diagnosisDate/i)
     expect(diagnosisDatePicker).toBeInTheDocument()
     expect(diagnosisDatePickerLabel).toBeInTheDocument()
-    expect(diagnosisDatePickerLabel.title).toBe('This is a required input')
+    expect(diagnosisDatePickerLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when diagnosis date changes', () => {
@@ -152,7 +154,7 @@ describe('Diagnosis Form', () => {
     const onsetDatePickerLabel = screen.getByText(/patient.diagnoses.onsetDate/i)
     expect(onsetDatePicker).toBeInTheDocument()
     expect(onsetDatePickerLabel).toBeInTheDocument()
-    expect(onsetDatePickerLabel.title).toBe('This is a required input')
+    expect(onsetDatePickerLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when onset date changes', () => {
@@ -171,7 +173,7 @@ describe('Diagnosis Form', () => {
     const abatementDatePickerLabel = screen.getByText(/patient.diagnoses.abatementDate/i)
     expect(abatementDatePicker).toBeInTheDocument()
     expect(abatementDatePickerLabel).toBeInTheDocument()
-    expect(abatementDatePickerLabel.title).toBe('This is a required input')
+    expect(abatementDatePickerLabel.title).toBe('این فیلد الزامی است')
   })
 
   it('should call the on change handler when abatementDate date changes', () => {
@@ -203,8 +205,8 @@ describe('Diagnosis Form', () => {
     setup(true)
     const nameInput = screen.getByLabelText(/patient.diagnoses.diagnosisName/i)
     const statusSelector = screen.getAllByRole('combobox')[1]
-    const diagnosisDatePicker = screen.getAllByDisplayValue(format(new Date(), 'MM/dd/yyyy'))[0]
-    const onsetDatePicker = screen.getAllByDisplayValue(format(new Date(), 'MM/dd/yyyy'))[1]
+    const diagnosisDatePicker = screen.getAllByDisplayValue(format(new Date(), 'yyyy/MM/dd'))[0]
+    const onsetDatePicker = screen.getAllByDisplayValue(format(new Date(), 'yyyy/MM/dd'))[1]
     const abatementDatePicker = within(screen.getByTestId('abatementDateDatePicker')).getByRole(
       'textbox',
     )
@@ -232,9 +234,9 @@ describe('Diagnosis Form', () => {
     const alert = screen.getByRole('alert')
     const nameInput = screen.getByLabelText(/patient.diagnoses.diagnosisName/i)
     const statusSelector = screen.getAllByRole('combobox')[1]
-    const diagnosisDatePicker = screen.getAllByDisplayValue(format(new Date(), 'MM/dd/yyyy'))[0]
-    const onsetDatePicker = screen.getAllByDisplayValue(format(new Date(), 'MM/dd/yyyy'))[1]
-    const abatementDatePicker = screen.getAllByDisplayValue(format(new Date(), 'MM/dd/yyyy'))[2]
+    const diagnosisDatePicker = screen.getAllByDisplayValue(format(new Date(), 'yyyy/MM/dd'))[0]
+    const onsetDatePicker = screen.getAllByDisplayValue(format(new Date(), 'yyyy/MM/dd'))[1]
+    const abatementDatePicker = screen.getAllByDisplayValue(format(new Date(), 'yyyy/MM/dd'))[2]
     const noteInput = screen.getByLabelText(/patient.diagnoses.note/i)
 
     expect(alert).toBeInTheDocument()

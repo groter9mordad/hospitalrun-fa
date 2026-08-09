@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import { logout } from '../../../user/user-slice'
 import useTranslator from '../../hooks/useTranslator'
+import { userRoleLabels } from '../../model/UserRole'
 import { RootState } from '../../store'
 import pageMap, { Page } from './pageMap'
 
@@ -12,7 +13,7 @@ const Navbar = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { t } = useTranslator()
-  const { permissions, user } = useSelector((state: RootState) => state.user)
+  const { permissions, role, user } = useSelector((state: RootState) => state.user)
 
   const navigateTo = (location: string) => {
     history.push(location)
@@ -78,7 +79,7 @@ const Navbar = () => {
         },
         {
           type: 'header',
-          label: 'HospitalRun',
+          label: 'RunCDX',
           onClick: () => {
             navigateTo('/')
           },
@@ -90,7 +91,7 @@ const Navbar = () => {
           children: getDropdownListOfPages(addPages),
           className: 'ml-auto nav-add-new d-none d-md-block',
           iconClassName: 'align-bottom',
-          label: 'Add',
+          label: 'افزودن',
           name: 'add',
           size: 'lg',
         },
@@ -100,8 +101,8 @@ const Navbar = () => {
           children: [
             {
               type: 'link',
-              label: `${t('user.login.currentlySignedInAs')} ${user?.givenName} ${
-                user?.familyName
+              label: `${user?.givenName} ${user?.familyName}${
+                role ? ` — ${userRoleLabels[role]}` : ''
               }`,
               onClick: () => {
                 navigateTo('/settings')
@@ -125,7 +126,7 @@ const Navbar = () => {
           ],
           className: 'pl-2 d-none d-md-block nav-account',
           iconClassName: 'align-bottom',
-          label: 'Patient',
+          label: 'حساب کاربری',
           name: 'patient',
           size: 'lg',
         },

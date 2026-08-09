@@ -1,10 +1,9 @@
-import shortid from 'shortid'
-
 import { relationalDb } from '../../../shared/config/pouchdb'
 import ImagingRepository from '../../../shared/db/ImagingRepository'
 import Imaging from '../../../shared/model/Imaging'
 
 const uuidV4Regex = /^[A-F\d]{8}-[A-F\d]{4}-4[A-F\d]{3}-[89AB][A-F\d]{3}-[A-F\d]{12}$/i
+const imagingCodeRegex = /^I-[A-F\d]{8}-[A-F\d]{4}-4[A-F\d]{3}-[89AB][A-F\d]{3}-[A-F\d]{12}$/i
 
 async function removeAllDocs() {
   const docs = await relationalDb.rel.find('imaging')
@@ -55,7 +54,7 @@ describe('imaging repository', () => {
         notes: 'some notes',
       } as Imaging)
 
-      expect(shortid.isValid(newImaging.code)).toBeTruthy()
+      expect(imagingCodeRegex.test(newImaging.code)).toBeTruthy()
     })
 
     it('should generate a timestamp for created date and last updated date', async () => {

@@ -35,7 +35,11 @@ const ViewPatientsTable = (props: Props) => {
         { label: t('patient.code'), key: 'code' },
         { label: t('patient.givenName'), key: 'givenName' },
         { label: t('patient.familyName'), key: 'familyName' },
-        { label: t('patient.sex'), key: 'sex' },
+        {
+          label: t('patient.sex'),
+          key: 'sex',
+          formatter: (row) => t(`sex.${row.sex}`),
+        },
         {
           label: t('patient.dateOfBirth'),
           key: 'dateOfBirth',

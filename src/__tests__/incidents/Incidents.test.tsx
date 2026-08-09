@@ -56,7 +56,7 @@ describe('Incidents', () => {
       it('The new incident screen when /incidents/new is accessed', () => {
         setup([Permissions.ReportIncident], '/incidents/new')
 
-        expect(screen.getByRole('form', { name: /report incident form/i })).toBeInTheDocument()
+        expect(screen.getByRole('form', { name: 'فرم گزارش رخداد' })).toBeInTheDocument()
       })
 
       it('should not navigate to /incidents/new if the user does not have ReportIncident permissions', async () => {

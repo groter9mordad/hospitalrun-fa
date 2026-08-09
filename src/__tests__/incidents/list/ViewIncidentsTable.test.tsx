@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Router } from 'react-router'
@@ -11,6 +10,7 @@ import IncidentSearchRequest from '../../../incidents/model/IncidentSearchReques
 import IncidentRepository from '../../../shared/db/IncidentRepository'
 import Incident from '../../../shared/model/Incident'
 import { extractUsername } from '../../../shared/util/extractUsername'
+import format from '../../../shared/util/formatDate'
 
 describe('View Incidents Table', () => {
   const expectedIncident = {
@@ -99,7 +99,7 @@ describe('View Incidents Table', () => {
         date: format(new Date(data[0].date), 'yyyy-MM-dd hh:mm a'),
         reportedBy: 'some user',
         reportedOn: format(new Date(data[0].reportedOn), 'yyyy-MM-dd hh:mm a'),
-        status: 'reported',
+        status: 'گزارش‌شده',
       },
     ]
 

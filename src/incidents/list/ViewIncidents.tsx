@@ -1,9 +1,10 @@
-import { Select, Label, Button, Container, Row, Column } from '@hospitalrun/components'
+import { Label, Button, Container, Row, Column } from '@hospitalrun/components'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { useButtonToolbarSetter } from '../../page-header/button-toolbar/ButtonBarProvider'
 import { useUpdateTitle } from '../../page-header/title/TitleContext'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import useTranslator from '../../shared/hooks/useTranslator'
 import IncidentFilter from '../IncidentFilter'

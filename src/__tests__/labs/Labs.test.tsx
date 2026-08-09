@@ -88,7 +88,7 @@ describe('Labs', () => {
         setup('/labs/1234', [Permissions.ViewLab])
         expect(
           await screen.findByRole('heading', {
-            name: `${expectedLab.type} for ${expectedPatient.fullName}(${expectedLab.code})`,
+            name: `${expectedLab.type} برای ${expectedPatient.fullName} (${expectedLab.code})`,
           }),
         ).toBeInTheDocument()
       })
@@ -97,7 +97,7 @@ describe('Labs', () => {
         setup('/labs/1234', [])
         expect(
           screen.queryByRole('heading', {
-            name: `${expectedLab.type} for ${expectedPatient.fullName}(${expectedLab.code})`,
+            name: `${expectedLab.type} برای ${expectedPatient.fullName} (${expectedLab.code})`,
           }),
         ).not.toBeInTheDocument()
       })

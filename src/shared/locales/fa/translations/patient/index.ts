@@ -238,6 +238,17 @@ export default {
       eventDate: 'تاریخ رویداد',
       recordType: 'نوع سابقه',
       information: 'اطلاعات',
+      recordTypes: {
+        appointment: 'نوبت',
+        lab: 'آزمایش',
+      },
+      events: {
+        labRequested: 'درخواست آزمایش',
+        labCanceled: 'لغو آزمایش',
+        labCompleted: 'تکمیل آزمایش',
+        appointmentStarted: 'شروع نوبت',
+        appointmentEnded: 'پایان نوبت',
+      },
       noHistoryTitle: 'سابقه‌ای وجود ندارد',
       noHistoryMessage: 'برای این بیمار هنوز سابقه‌ای ثبت نشده است.',
     },

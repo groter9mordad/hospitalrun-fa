@@ -241,7 +241,7 @@ const ViewLab = () => {
             <div className="form-group lab-status">
               <h4>{t('labs.lab.status')}</h4>
               <Badge color={getBadgeColor()}>
-                <h5>{labToView.status}</h5>
+                <h5>{t(`labs.status.${labToView.status}`)}</h5>
               </Badge>
             </div>
           </Column>

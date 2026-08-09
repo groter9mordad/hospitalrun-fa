@@ -1,11 +1,11 @@
 import { screen, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 
 import SearchPatients from '../../../patients/search/SearchPatients'
 import PatientRepository from '../../../shared/db/PatientRepository'
 import Patient from '../../../shared/model/Patient'
+import format from '../../../shared/util/formatDate'
 
 describe('Search Patients', () => {
   const dateOfBirth = new Date(2010, 1, 1, 1, 1, 1, 1)
@@ -14,7 +14,7 @@ describe('Search Patients', () => {
     givenName: 'givenName',
     familyName: 'familyName',
     code: 'test code',
-    sex: 'sex',
+    sex: 'male',
     dateOfBirth: dateOfBirth.toISOString(),
   } as Patient
 
@@ -81,11 +81,11 @@ describe('Search Patients', () => {
       expect(screen.getByRole('cell', { name: expectedPatient.familyName })).toBeInTheDocument()
     })
     await waitFor(() => {
-      expect(screen.getByRole('cell', { name: expectedPatient.sex })).toBeInTheDocument()
+      expect(screen.getByRole('cell', { name: `sex.${expectedPatient.sex}` })).toBeInTheDocument()
     })
     await waitFor(() => {
       expect(
-        screen.getByRole('cell', { name: format(dateOfBirth, 'MM/dd/yyyy') }),
+        screen.getByRole('cell', { name: format(dateOfBirth, 'yyyy/MM/dd') }),
       ).toBeInTheDocument()
     })
 

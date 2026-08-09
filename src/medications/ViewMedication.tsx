@@ -1,10 +1,11 @@
-import { Select, Row, Column, Badge, Button, Alert, Label } from '@hospitalrun/components'
+import { Row, Column, Badge, Button, Alert, Label } from '@hospitalrun/components'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
 
 import useAddBreadcrumbs from '../page-header/breadcrumbs/useAddBreadcrumbs'
 import { useUpdateTitle } from '../page-header/title/TitleContext'
+import Select from '../shared/components/input/PersianSelect'
 import { SelectOption } from '../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../shared/components/input/TextInputWithLabelFormGroup'
@@ -15,6 +16,11 @@ import Permissions from '../shared/model/Permissions'
 import { RootState } from '../shared/store'
 import format from '../shared/util/formatDate'
 import { cancelMedication, updateMedication, fetchMedication } from './medication-slice'
+import {
+  medicationIntentTranslationKey,
+  medicationPriorityTranslationKey,
+  medicationStatusTranslationKey,
+} from './util/translationKeys'
 
 const getTitle = (patient: Patient | undefined, medication: Medication | undefined) =>
   patient && medication ? `${medication.medication} برای ${patient.fullName}` : ''
@@ -173,7 +179,7 @@ const ViewMedication = () => {
             <div className="form-group medication-status">
               <h4>{t('medications.medication.status')}</h4>
               <Badge color={getBadgeColor()}>
-                <h5>{medicationToView.status}</h5>
+                <h5>{t(medicationStatusTranslationKey(medicationToView.status))}</h5>
               </Badge>
             </div>
           </Column>
@@ -208,7 +214,7 @@ const ViewMedication = () => {
             <div className="form-group medication-intent">
               <h4>{t('medications.medication.intent')}</h4>
               <Badge color={getBadgeColor()}>
-                <h5>{medicationToView.intent}</h5>
+                <h5>{t(medicationIntentTranslationKey(medicationToView.intent))}</h5>
               </Badge>
             </div>
           </Column>
@@ -216,7 +222,7 @@ const ViewMedication = () => {
             <div className="form-group medication-priority">
               <h4>{t('medications.medication.priority')}</h4>
               <Badge color={getBadgeColor()}>
-                <h5>{medicationToView.priority}</h5>
+                <h5>{t(medicationPriorityTranslationKey(medicationToView.priority))}</h5>
               </Badge>
             </div>
           </Column>
@@ -225,7 +231,7 @@ const ViewMedication = () => {
         <Row>
           <Column>
             <Label
-              title={t('medications.medication.status')}
+              title="این فیلد الزامی است"
               text={t('medications.medication.status')}
               isRequired
             />
@@ -238,7 +244,7 @@ const ViewMedication = () => {
           </Column>
           <Column>
             <Label
-              title={t('medications.medication.intent')}
+              title="این فیلد الزامی است"
               text={t('medications.medication.intent')}
               isRequired
             />
@@ -251,7 +257,7 @@ const ViewMedication = () => {
           </Column>
           <Column>
             <Label
-              title={t('medications.medication.priority')}
+              title="این فیلد الزامی است"
               text={t('medications.medication.priority')}
               isRequired
             />

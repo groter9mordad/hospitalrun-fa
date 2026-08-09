@@ -1,8 +1,5 @@
-import shortid from 'shortid'
+import { v4 as uuid } from 'uuid'
 
-const generateCode = (prefix: string) => {
-  const id = shortid.generate()
-  return `${prefix}-${id}`
-}
+const generateCode = (prefix: string) => `${prefix}-${uuid()}`
 
 export default generateCode

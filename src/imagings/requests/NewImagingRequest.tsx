@@ -1,10 +1,11 @@
-import { Select, Typeahead, Label, Button, Alert, Column, Row } from '@hospitalrun/components'
+import { Typeahead, Label, Button, Alert, Column, Row } from '@hospitalrun/components'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import useAddBreadcrumbs from '../../page-header/breadcrumbs/useAddBreadcrumbs'
 import { useUpdateTitle } from '../../page-header/title/TitleContext'
+import Select from '../../shared/components/input/PersianSelect'
 import { SelectOption } from '../../shared/components/input/SelectOption'
 import TextFieldWithLabelFormGroup from '../../shared/components/input/TextFieldWithLabelFormGroup'
 import TextInputWithLabelFormGroup from '../../shared/components/input/TextInputWithLabelFormGroup'
@@ -136,7 +137,12 @@ const NewImagingRequest = () => {
         <Row>
           <Column>
             <div className="form-group patient-typeahead">
-              <Label htmlFor="patientTypeahead" isRequired text={t('imagings.imaging.patient')} />
+              <Label
+                htmlFor="patientTypeahead"
+                isRequired
+                text={t('imagings.imaging.patient')}
+                title="این فیلد الزامی است"
+              />
               <Typeahead
                 id="patientTypeahead"
                 placeholder={t('imagings.imaging.patient')}
@@ -153,11 +159,7 @@ const NewImagingRequest = () => {
           </Column>
           <Column>
             <div className="visits" data-testid="visitSelect">
-              <Label
-                text={t('patient.visits.label')}
-                title={t('patient.visits.label')}
-                isRequired
-              />
+              <Label text={t('patient.visits.label')} title="این فیلد الزامی است" isRequired />
               <Select
                 id="visitSelect"
                 options={visitOption || []}
@@ -182,11 +184,7 @@ const NewImagingRequest = () => {
           onChange={onImagingTypeChange}
         />
         <div className="imaging-status" data-testid="statusSelect">
-          <Label
-            text={t('imagings.imaging.status')}
-            title={t('imagings.imaging.status')}
-            isRequired
-          />
+          <Label text={t('imagings.imaging.status')} title="این فیلد الزامی است" isRequired />
           <Select
             id="statusSelect"
             options={statusOptions}

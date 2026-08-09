@@ -19,7 +19,12 @@ const DateTimePickerWithLabelFormGroup = (props: Props) => {
   const id = `${name}DateTimePicker`
   return (
     <div className="form-group" data-testid={id}>
-      <Label text={label} isRequired={isRequired} htmlFor={id} />
+      <Label
+        text={label}
+        isRequired={isRequired}
+        htmlFor={id}
+        title={isRequired ? 'این فیلد الزامی است' : undefined}
+      />
       <LocaleAwareDatePicker
         id={id}
         value={value}

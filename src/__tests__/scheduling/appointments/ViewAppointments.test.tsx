@@ -1,6 +1,5 @@
 import { render, waitFor, screen } from '@testing-library/react'
 import addMinutes from 'date-fns/addMinutes'
-import format from '../../../shared/util/formatDate'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { MemoryRouter } from 'react-router-dom'
@@ -15,6 +14,7 @@ import PatientRepository from '../../../shared/db/PatientRepository'
 import Appointment from '../../../shared/model/Appointment'
 import Patient from '../../../shared/model/Patient'
 import { RootState } from '../../../shared/store'
+import format from '../../../shared/util/formatDate'
 
 const { TitleProvider } = titleUtil
 
@@ -72,9 +72,9 @@ describe('ViewAppointments', () => {
       expect(screen.getAllByText(expectedPatient.fullName as string)[0]).toBeInTheDocument()
     })
 
-    const expectedStart = format(new Date(expectedAppointment.startDateTime), 'h:mm')
-    const expectedEnd = format(new Date(expectedAppointment.endDateTime), 'h:mm')
+    const expectedStart = format(new Date(expectedAppointment.startDateTime), 'HH:mm')
+    const expectedEnd = format(new Date(expectedAppointment.endDateTime), 'HH:mm')
 
-    expect(screen.getByText(`${expectedStart} - ${expectedEnd}`)).toBeInTheDocument()
+    expect(screen.getByText(`${expectedStart} تا ${expectedEnd}`)).toBeInTheDocument()
   })
 })
