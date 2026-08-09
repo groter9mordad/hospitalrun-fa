@@ -3,6 +3,8 @@ name: Windows installer
 on:
   workflow_dispatch:
   push:
+    branches:
+      - master
     tags:
       - "v*"
 
@@ -76,17 +78,21 @@ jobs:
             deployment/windows/README-fa.md
 
       - name: Publish permanent GitHub release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          gh release view $env:RELEASE_TAG *> $null
+          $releaseTag = $env:GITHUB_REF_NAME
+          if ($env:GITHUB_REF -eq "refs/heads/master") {
+            $version = (Get-Content "package.json" -Raw | ConvertFrom-Json).version
+            $releaseTag = "v${version}"
+          }
+          gh release view $releaseTag *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $env:RELEASE_TAG --verify-tag --generate-notes --title "RunCDX $env:RELEASE_TAG"
+            gh release create $releaseTag --target $env:GITHUB_SHA --generate-notes --prerelease --title "RunCDX $releaseTag"
           }
           Get-ChildItem "release/RunCDX-Setup-*.exe", "release/SHA256SUMS.txt" |
-            ForEach-Object { gh release upload $env:RELEASE_TAG $_.FullName --clobber }
-          gh release upload $env:RELEASE_TAG "deployment/windows/Install-RunCDXServer.ps1" --clobber
-          gh release upload $env:RELEASE_TAG "deployment/windows/README-fa.md" --clobber
+            ForEach-Object { gh release upload $releaseTag $_.FullName --clobber }
+          gh release upload $releaseTag "deployment/windows/Install-RunCDXServer.ps1" --clobber
+          gh release upload $releaseTag "deployment/windows/README-fa.md" --clobber
