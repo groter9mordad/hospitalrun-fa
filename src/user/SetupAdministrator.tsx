@@ -8,6 +8,22 @@ import AuthLayout from './AuthLayout'
 import { createLocalUser, hasLocalUsers } from './local-auth'
 import { loginSuccess } from './user-slice'
 
+export const getAdministratorSetupErrorMessage = (setupError: unknown) => {
+  const errorCode = setupError instanceof Error ? setupError.message : ''
+  switch (errorCode) {
+    case 'INVALID_USERNAME':
+      return 'نام کاربری باید حداقل ۳ نویسه داشته باشد.'
+    case 'INVALID_PASSWORD':
+      return 'رمز عبور باید حداقل ۸ نویسه داشته باشد.'
+    case 'USERNAME_EXISTS':
+      return 'این نام کاربری قبلاً ثبت شده است. یک نام کاربری دیگر انتخاب کنید.'
+    case 'CRYPTO_UNAVAILABLE':
+      return 'امکان امن‌سازی رمز عبور در این اجرا فعال نیست. این یک خطای داخلی RunCDX است.'
+    default:
+      return 'ساخت مدیر به دلیل یک خطای داخلی انجام نشد. جزئیات خطا در گزارش برنامه ثبت شد.'
+  }
+}
+
 const SetupAdministrator = ({ onComplete }: { onComplete: () => void }) => {
   const dispatch = useDispatch()
   const [givenName, setGivenName] = useState('')
@@ -56,6 +72,10 @@ const SetupAdministrator = ({ onComplete }: { onComplete: () => void }) => {
       setError('نام و نام خانوادگی مدیر را وارد کنید.')
       return
     }
+    if (username.trim().length < 3) {
+      setError('نام کاربری باید حداقل ۳ نویسه داشته باشد.')
+      return
+    }
     if (password.length < 8) {
       setError('رمز عبور باید حداقل ۸ نویسه داشته باشد.')
       return
@@ -77,7 +97,12 @@ const SetupAdministrator = ({ onComplete }: { onComplete: () => void }) => {
       dispatch(loginSuccess(administrator))
       onComplete()
     } catch (setupError) {
-      setError('ساخت مدیر انجام نشد. نام کاربری باید حداقل ۳ نویسه و یکتا باشد.')
+      // Keep unexpected runtime/database failures distinguishable from normal
+      // form validation. The previous implementation converted every failure
+      // into a false "username is not unique" message, hiding production bugs.
+      // eslint-disable-next-line no-console
+      console.error('RunCDX failed to create the initial administrator.', setupError)
+      setError(getAdministratorSetupErrorMessage(setupError))
     } finally {
       setSaving(false)
     }

@@ -68,16 +68,18 @@ jobs:
       - name: Build NSIS installer
         run: npm run dist:win
 
-      - name: Smoke test packaged desktop app
+      - name: Smoke test packaged desktop runtime
         shell: pwsh
         run: |
           $executable = Resolve-Path "release/win-unpacked/RunCDX.exe"
-          $process = Start-Process -FilePath $executable -PassThru
-          Start-Sleep -Seconds 15
-          if ($process.HasExited) {
-            throw "RunCDX exited during the Windows smoke test with code $($process.ExitCode)."
+          $process = Start-Process -FilePath $executable -ArgumentList "--runcdx-runtime-smoke-test" -PassThru
+          if (-not $process.WaitForExit(45000)) {
+            Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            throw "RunCDX runtime smoke test timed out."
           }
-          Stop-Process -Id $process.Id -Force
+          if ($process.ExitCode -ne 0) {
+            throw "RunCDX runtime smoke test failed with code $($process.ExitCode)."
+          }
           Get-Process RunCDX -ErrorAction SilentlyContinue | Stop-Process -Force
 
       - name: Verify bundled CouchDB resource

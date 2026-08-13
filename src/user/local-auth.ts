@@ -7,6 +7,12 @@ import { permissionsForRole, UserRole } from '../shared/model/UserRole'
 const USER_DOCUMENT_PREFIX = 'runcdx-user:'
 const PASSWORD_ITERATIONS = 210000
 
+export type LocalAuthErrorCode =
+  | 'INVALID_USERNAME'
+  | 'INVALID_PASSWORD'
+  | 'USERNAME_EXISTS'
+  | 'CRYPTO_UNAVAILABLE'
+
 interface LocalUserDocument {
   _id: string
   _rev?: string
@@ -40,6 +46,15 @@ export interface LocalUserSummary {
 const normalizeUsername = (username: string) => username.trim().toLocaleLowerCase('en-US')
 const userDocumentId = (username: string) => `${USER_DOCUMENT_PREFIX}${normalizeUsername(username)}`
 
+const authError = (code: LocalAuthErrorCode): Error => new Error(code)
+
+const getWebCrypto = () => {
+  if (!window.crypto || !window.crypto.subtle) {
+    throw authError('CRYPTO_UNAVAILABLE')
+  }
+  return window.crypto
+}
+
 const bytesToBase64 = (bytes: Uint8Array) => {
   let binary = ''
   bytes.forEach((byte) => {
@@ -58,14 +73,15 @@ const base64ToBytes = (value: string) => {
 }
 
 const hashPassword = async (password: string, salt: Uint8Array, iterations: number) => {
-  const passwordKey = await window.crypto.subtle.importKey(
+  const crypto = getWebCrypto()
+  const passwordKey = await crypto.subtle.importKey(
     'raw',
     new TextEncoder().encode(password),
     'PBKDF2',
     false,
     ['deriveBits'],
   )
-  const hash = await window.crypto.subtle.deriveBits(
+  const hash = await crypto.subtle.deriveBits(
     { name: 'PBKDF2', hash: 'SHA-256', salt, iterations },
     passwordKey,
     256,
@@ -101,11 +117,15 @@ export const createLocalUser = async (request: {
   role: UserRole
 }): Promise<AuthenticatedUser> => {
   const username = normalizeUsername(request.username)
-  if (username.length < 3 || request.password.length < 8) {
-    throw new Error('INVALID_USER_DETAILS')
+  if (username.length < 3) {
+    throw authError('INVALID_USERNAME')
+  }
+  if (request.password.length < 8) {
+    throw authError('INVALID_PASSWORD')
   }
 
-  const salt = window.crypto.getRandomValues(new Uint8Array(16))
+  const crypto = getWebCrypto()
+  const salt = crypto.getRandomValues(new Uint8Array(16))
   const now = new Date().toISOString()
   const document: LocalUserDocument = {
     _id: userDocumentId(username),
@@ -122,7 +142,15 @@ export const createLocalUser = async (request: {
     updatedAt: now,
   }
 
-  await clinicalDb.put(document as any)
+  try {
+    await clinicalDb.put(document as any)
+  } catch (error) {
+    const databaseError = error as any
+    if (databaseError && (databaseError.status === 409 || databaseError.name === 'conflict')) {
+      throw authError('USERNAME_EXISTS')
+    }
+    throw error
+  }
   return toAuthenticatedUser(document)
 }
 
