@@ -87,7 +87,6 @@ const Navbar = () => {
         },
         {
           type: 'link-list-icon',
-          alignRight: true,
           children: getDropdownListOfPages(addPages),
           className: 'ml-auto nav-add-new d-none d-md-block',
           iconClassName: 'align-bottom',
@@ -97,7 +96,6 @@ const Navbar = () => {
         },
         {
           type: 'link-list-icon',
-          alignRight: true,
           children: [
             {
               type: 'link',
