@@ -63,10 +63,6 @@ const NewAppointment = () => {
   }
 
   const resolveTypedPatient = async (appointment: Appointment) => {
-    if (appointment.patient) {
-      return appointment
-    }
-
     const patientInput = document.getElementById('patientTypeahead') as HTMLInputElement | null
     const query = patientInput?.value.trim()
     if (!query) {
@@ -82,12 +78,21 @@ const NewAppointment = () => {
   }
 
   const onSave = async () => {
-    const resolvedAppointment = await resolveTypedPatient(newAppointment)
-    if (resolvedAppointment !== newAppointment) {
-      setAppointment(resolvedAppointment)
+    const initialError = validateNewAppointment(newAppointment)
+    const errorKeys = Object.keys(initialError)
+    const patientIsOnlyError =
+      Boolean(initialError.patient) && errorKeys.every((key) => key === 'patient')
+
+    let appointmentToSave = newAppointment
+    if (patientIsOnlyError) {
+      appointmentToSave = await resolveTypedPatient(newAppointment)
+      if (appointmentToSave !== newAppointment) {
+        setAppointment(appointmentToSave)
+      }
     }
+
     setSaved(true)
-    setError(validateNewAppointment(resolvedAppointment))
+    setError(validateNewAppointment(appointmentToSave))
   }
 
   useEffect(() => {
