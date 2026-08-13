@@ -91,8 +91,8 @@ const NewAppointment = () => {
       }
     }
 
-    setSaved(true)
     setError(validateNewAppointment(appointmentToSave))
+    setSaved(true)
   }
 
   useEffect(() => {
