@@ -1,6 +1,6 @@
 {
   "name": "runcdx",
-  "version": "2.0.0-alpha.10",
+  "version": "2.0.0-alpha.11",
   "description": "RunCDX offline-first clinic management desktop application",
   "private": false,
   "license": "MIT",
@@ -213,7 +213,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint-staged",
-      "commit-msg": "npm run commitlint -- -E HUSKY_GIT_PARAMS"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "config": {
