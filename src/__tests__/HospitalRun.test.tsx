@@ -176,5 +176,19 @@ describe('HospitalRun', () => {
       const main = screen.getByRole('main')
       expect(main.lastChild).toHaveClass('Toastify')
     })
+
+    it('uses the explicit desktop shell instead of Bootstrap LTR column offsets', () => {
+      setup('/', [Permissions.ReadPatients], UserRole.Administrator)
+
+      const shell = screen.getByTestId('runcdx-app-shell')
+      const main = screen.getByTestId('runcdx-main')
+
+      expect(shell.querySelector('.sidebar')).toBeInTheDocument()
+      expect(main).toHaveClass('runcdx-main')
+      expect(main).not.toHaveClass('ml-sm-auto')
+      expect(main.className).not.toMatch(/col-md-|col-lg-/)
+      expect(main.closest('.row')).toBeNull()
+      expect(screen.getByTestId('runcdx-dashboard')).toBeInTheDocument()
+    })
   })
 })
