@@ -129,12 +129,8 @@ const HospitalRun = () => {
                   />
                   <Route
                     path="/settings"
-                    render={(props) =>
-                      role === UserRole.Administrator ? (
-                        <Settings {...props} />
-                      ) : (
-                        <Redirect to="/" />
-                      )
+                    render={() =>
+                      role === UserRole.Administrator ? <Settings /> : <Redirect to="/" />
                     }
                   />
                   <PermissionRoute
