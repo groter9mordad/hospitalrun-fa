@@ -9,8 +9,10 @@ import {
 import { getAdministratorSetupErrorMessage } from '../../user/SetupAdministrator'
 
 import { webcrypto } from 'crypto'
+import { TextEncoder as NodeTextEncoder } from 'util'
 
 const originalCrypto = window.crypto
+const originalTextEncoder = (global as any).TextEncoder
 
 const clearLocalUsers = async () => {
   const users = await clinicalDb.allDocs({
@@ -34,6 +36,10 @@ describe('local authentication', () => {
       configurable: true,
       value: webcrypto,
     })
+    Object.defineProperty(global, 'TextEncoder', {
+      configurable: true,
+      value: NodeTextEncoder,
+    })
   })
 
   beforeEach(async () => {
@@ -44,6 +50,10 @@ describe('local authentication', () => {
     Object.defineProperty(window, 'crypto', {
       configurable: true,
       value: originalCrypto,
+    })
+    Object.defineProperty(global, 'TextEncoder', {
+      configurable: true,
+      value: originalTextEncoder,
     })
   })
 
