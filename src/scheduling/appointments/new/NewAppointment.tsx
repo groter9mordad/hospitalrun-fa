@@ -7,6 +7,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 
 import useAddBreadcrumbs from '../../../page-header/breadcrumbs/useAddBreadcrumbs'
 import { useUpdateTitle } from '../../../page-header/title/TitleContext'
+import PatientRepository from '../../../shared/db/PatientRepository'
 import useTranslator from '../../../shared/hooks/useTranslator'
 import Appointment from '../../../shared/model/Appointment'
 import Patient from '../../../shared/model/Patient'
@@ -61,13 +62,40 @@ const NewAppointment = () => {
     history.push('/appointments')
   }
 
-  const onSave = () => {
+  const resolveTypedPatient = async (appointment: Appointment) => {
+    const patientInput = document.getElementById('patientTypeahead') as HTMLInputElement | null
+    const query = patientInput?.value.trim()
+    if (!query) {
+      return appointment
+    }
+
+    const matches = await PatientRepository.search(query)
+    if (matches.length !== 1) {
+      return appointment
+    }
+
+    return { ...appointment, patient: matches[0].id } as Appointment
+  }
+
+  const onSave = async () => {
+    const initialError = validateNewAppointment(newAppointment)
+    const errorKeys = Object.keys(initialError)
+    const patientIsOnlyError =
+      Boolean(initialError.patient) && errorKeys.every((key) => key === 'patient')
+
+    let appointmentToSave = newAppointment
+    if (patientIsOnlyError) {
+      appointmentToSave = await resolveTypedPatient(newAppointment)
+      if (appointmentToSave !== newAppointment) {
+        setAppointment(appointmentToSave)
+      }
+    }
+
+    setError(validateNewAppointment(appointmentToSave))
     setSaved(true)
-    setError(validateNewAppointment(newAppointment))
   }
 
   useEffect(() => {
-    // if save click and no error proceed, else give error message.
     if (saved) {
       if (isEmpty(newAppointmentMutateError) && !isErrorNewAppointment) {
         newAppointmentMutate(newAppointment).then((result) => {

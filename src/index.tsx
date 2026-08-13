@@ -7,6 +7,7 @@ import '@fontsource/vazirmatn/500.css'
 import '@fontsource/vazirmatn/700.css'
 import './index.css'
 import './runcdx-layout.css'
+import './runcdx-navigation.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import './shared/config/i18n'
@@ -19,6 +20,4 @@ ReactDOM.render(
   document.getElementById('root'),
 )
 
-// Electron packages all application assets locally. A service worker would
-// only add a second, stale-prone cache layer and is unnecessary for offline use.
 serviceWorker.unregister()

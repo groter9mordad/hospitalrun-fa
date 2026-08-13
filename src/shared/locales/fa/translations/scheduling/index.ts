@@ -26,7 +26,7 @@ export default {
       errors: {
         createAppointmentError: 'نتوانستیم نوبت جدید را ایجاد کنیم.',
         updateAppointmentError: 'نتوانستیم نوبت را به‌روزرسانی کنیم.',
-        patientRequired: 'بیمار الزامی است.',
+        patientRequired: 'نام بیمار را جست‌وجو کنید و بیمار موردنظر را از فهرست انتخاب کنید.',
         startDateMustBeBeforeEndDate: 'زمان شروع باید قبل از زمان پایان باشد.',
       },
       reason: 'دلیل',

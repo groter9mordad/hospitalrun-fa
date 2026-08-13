@@ -1,0 +1,28 @@
+.navbar {
+  overflow: visible;
+}
+
+.navbar .dropdown-menu {
+  z-index: 2000;
+}
+
+html[dir='rtl'] .nav-add-new .dropdown-menu,
+html[dir='rtl'] .nav-account .dropdown-menu {
+  left: 0 !important;
+  right: auto !important;
+  min-width: 14rem;
+  max-width: calc(100vw - 1rem);
+  text-align: right;
+}
+
+.runcdx-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+html[dir='rtl'] .runcdx-back-button {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
