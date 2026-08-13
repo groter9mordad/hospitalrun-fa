@@ -1,7 +1,7 @@
 import { Toaster } from '@hospitalrun/components'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 import Dashboard from './dashboard/Dashboard'
 import Imagings from './imagings/Imagings'
@@ -18,11 +18,40 @@ import Settings from './settings/Settings'
 import Navbar from './shared/components/navbar/Navbar'
 import { NetworkStatusMessage } from './shared/components/network-status'
 import Sidebar from './shared/components/Sidebar'
+import Permissions from './shared/model/Permissions'
+import { UserRole } from './shared/model/UserRole'
 import { RootState } from './shared/store'
+
+interface PermissionRouteProps {
+  path: string
+  component: React.ComponentType<any>
+  permissions: Permissions[]
+  userPermissions: Permissions[]
+}
+
+const PermissionRoute = ({
+  path,
+  component: Component,
+  permissions,
+  userPermissions,
+}: PermissionRouteProps) => (
+  <Route
+    path={path}
+    render={(props) =>
+      permissions.some((permission) => userPermissions.includes(permission)) ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to="/" />
+      )
+    }
+  />
+)
 
 const HospitalRun = () => {
   const { title } = useTitle()
   const { sidebarCollapsed } = useSelector((state: RootState) => state.components)
+  const userPermissions = useSelector((state: RootState) => state.user.permissions)
+  const role = useSelector((state: RootState) => state.user.role)
 
   return (
     <div>
@@ -48,13 +77,69 @@ const HospitalRun = () => {
               <div>
                 <Switch>
                   <Route exact path="/" component={Dashboard} />
-                  <Route path="/appointments" component={Appointments} />
-                  <Route path="/patients" component={Patients} />
-                  <Route path="/labs" component={Labs} />
-                  <Route path="/medications" component={Medications} />
-                  <Route path="/incidents" component={Incidents} />
-                  <Route path="/settings" component={Settings} />
-                  <Route path="/imaging" component={Imagings} />
+                  <PermissionRoute
+                    path="/appointments"
+                    component={Appointments}
+                    userPermissions={userPermissions}
+                    permissions={[
+                      Permissions.ReadAppointments,
+                      Permissions.WriteAppointments,
+                      Permissions.DeleteAppointment,
+                    ]}
+                  />
+                  <PermissionRoute
+                    path="/patients"
+                    component={Patients}
+                    userPermissions={userPermissions}
+                    permissions={[Permissions.ReadPatients, Permissions.WritePatients]}
+                  />
+                  <PermissionRoute
+                    path="/labs"
+                    component={Labs}
+                    userPermissions={userPermissions}
+                    permissions={[
+                      Permissions.ViewLabs,
+                      Permissions.ViewLab,
+                      Permissions.RequestLab,
+                      Permissions.CompleteLab,
+                      Permissions.CancelLab,
+                    ]}
+                  />
+                  <PermissionRoute
+                    path="/medications"
+                    component={Medications}
+                    userPermissions={userPermissions}
+                    permissions={[
+                      Permissions.ViewMedications,
+                      Permissions.ViewMedication,
+                      Permissions.RequestMedication,
+                      Permissions.CompleteMedication,
+                      Permissions.CancelMedication,
+                    ]}
+                  />
+                  <PermissionRoute
+                    path="/incidents"
+                    component={Incidents}
+                    userPermissions={userPermissions}
+                    permissions={[
+                      Permissions.ViewIncidents,
+                      Permissions.ReportIncident,
+                      Permissions.ViewIncidentWidgets,
+                    ]}
+                  />
+                  <Route
+                    path="/settings"
+                    render={(props) =>
+                      role === UserRole.Administrator ? <Settings {...props} /> : <Redirect to="/" />
+                    }
+                  />
+                  <PermissionRoute
+                    path="/imaging"
+                    component={Imagings}
+                    userPermissions={userPermissions}
+                    permissions={[Permissions.ViewImagings, Permissions.RequestImaging]}
+                  />
+                  <Redirect to="/" />
                 </Switch>
               </div>
               <Toaster autoClose={5000} hideProgressBar draggable />
