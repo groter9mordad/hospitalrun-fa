@@ -14,7 +14,7 @@ export interface LoginError {
 }
 
 export interface UserState {
-  permissions: (Permissions | null)[]
+  permissions: Permissions[]
   user?: User
   role?: UserRole
   loginError?: LoginError
@@ -39,7 +39,7 @@ const userSlice = createSlice({
       }: PayloadAction<{
         user: User
         role?: UserRole
-        permissions: (Permissions | null)[]
+        permissions: Permissions[]
       }>,
     ) {
       state.user = payload.user
