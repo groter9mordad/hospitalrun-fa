@@ -12,7 +12,7 @@ import { RootState } from '../shared/store'
 interface DashboardItem {
   label: string
   path: string
-  icon: string
+  icon: React.ComponentProps<typeof Icon>['icon']
   permissions?: Permissions[]
   administratorOnly?: boolean
 }
@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
     {
       label: t('settings.label'),
       path: '/settings',
-      icon: 'settings',
+      icon: 'setting',
       administratorOnly: true,
     },
   ]
