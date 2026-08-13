@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-use-before-define */
 
 type Document = Record<string, any> & {
   _id: string
@@ -9,54 +8,6 @@ type Document = Record<string, any> & {
 
 const isRecord = (value: unknown): value is Record<string, any> =>
   Boolean(value) && typeof value === 'object' && !Array.isArray(value)
-
-const itemIdentity = (value: unknown): string | undefined => {
-  if (!isRecord(value)) {
-    return undefined
-  }
-  const identity = value.id || value._id || value.code
-  return typeof identity === 'string' && identity ? identity : undefined
-}
-
-function mergeValues(older: unknown, newer: unknown): unknown {
-  if (newer === undefined) {
-    return older
-  }
-  if (Array.isArray(older) && Array.isArray(newer)) {
-    return mergeArrays(older, newer)
-  }
-  if (isRecord(older) && isRecord(newer)) {
-    return Object.keys({ ...older, ...newer }).reduce<Record<string, unknown>>(
-      (merged, key) => ({
-        ...merged,
-        [key]: mergeValues(older[key], newer[key]),
-      }),
-      {},
-    )
-  }
-  return newer
-}
-
-function mergeArrays(older: unknown[], newer: unknown[]): unknown[] {
-  const merged = older.map((item) => item)
-  newer.forEach((newItem) => {
-    const identity = itemIdentity(newItem)
-    if (!identity) {
-      if (!merged.some((item) => JSON.stringify(item) === JSON.stringify(newItem))) {
-        merged.push(newItem)
-      }
-      return
-    }
-
-    const existingIndex = merged.findIndex((item) => itemIdentity(item) === identity)
-    if (existingIndex === -1) {
-      merged.push(newItem)
-    } else {
-      merged[existingIndex] = mergeValues(merged[existingIndex], newItem)
-    }
-  })
-  return merged
-}
 
 const documentTimestamp = (document: Document) => {
   const data = isRecord(document.data) ? document.data : document
@@ -69,21 +20,30 @@ const withoutRevisionMetadata = (document: Document) => {
   return contents
 }
 
+/**
+ * Resolve a conflict by selecting one complete revision, never by combining
+ * clinical fields from separate edits. A field-by-field merge can manufacture
+ * a medical record that no clinician actually entered. The current CouchDB
+ * winner is preferred when timestamps are equal or unavailable; otherwise the
+ * most recently timestamped whole revision is copied onto the winning branch.
+ * Every original revision is written to the conflict audit before cleanup.
+ *
+ * The historic export name is retained to avoid breaking callers.
+ */
 export const mergeConflictingDocuments = (documents: Document[]): Document => {
-  const ordered = [...documents].sort(
-    (left, right) => documentTimestamp(left) - documentTimestamp(right),
-  )
-  const winningDocument = documents[0]
-  const mergedContents = ordered.reduce<Record<string, any>>(
-    (merged, document) =>
-      mergeValues(merged, withoutRevisionMetadata(document)) as Record<string, any>,
-    {},
+  if (!documents.length) {
+    throw new Error('At least one document revision is required.')
+  }
+
+  const couchDbWinner = documents[0]
+  const selected = documents.reduce((current, candidate) =>
+    documentTimestamp(candidate) > documentTimestamp(current) ? candidate : current,
   )
 
   return {
-    ...mergedContents,
-    _id: winningDocument._id,
-    _rev: winningDocument._rev,
+    ...withoutRevisionMetadata(selected),
+    _id: couchDbWinner._id,
+    _rev: couchDbWinner._rev,
   }
 }
 
@@ -111,19 +71,28 @@ export const resolveDatabaseConflicts = async (database: PouchDB.Database) => {
             ),
           )
           const versions = [winningDocument, ...losingDocuments]
-          const mergedDocument = mergeConflictingDocuments(versions)
+          const resolvedDocument = mergeConflictingDocuments(versions)
 
+          // Persist every original branch before changing or deleting revisions.
+          // This makes automatic conflict handling recoverable and auditable.
           await database.put({
             _id: `runcdx-conflict-audit:${winningDocument._id}:${Date.now()}`,
             type: 'runcdx_conflict_audit',
             recordId: winningDocument._id,
             resolvedAt: new Date().toISOString(),
+            resolutionMode: 'latest-whole-document',
+            selectedRevision:
+              versions.find(
+                (version) =>
+                  JSON.stringify(withoutRevisionMetadata(version)) ===
+                  JSON.stringify(withoutRevisionMetadata(resolvedDocument)),
+              )?._rev || winningDocument._rev,
             versions: versions.map((version) => ({
               revision: version._rev,
               contents: withoutRevisionMetadata(version),
             })),
           } as any)
-          await database.put(mergedDocument as any)
+          await database.put(resolvedDocument as any)
           await database.bulkDocs(
             losingDocuments.map((document) => ({
               _id: document._id,
