@@ -102,6 +102,7 @@ $msiName = "apache-couchdb-${CouchDbVersion}.msi"
 $msiPath = Join-Path $workDirectory $msiName
 $hashPath = "${msiPath}.sha256"
 $downloadRoot = "https://couchdb.neighbourhood.ie/downloads/${CouchDbVersion}/win"
+$checksumRoot = "https://neighbourhood.ie/download-apache-couchdb/${CouchDbVersion}/win"
 $logPath = Join-Path $workDirectory 'couchdb-install.log'
 $bundledVendorDirectory = Join-Path $PSScriptRoot 'vendor'
 $bundledMsiPath = Join-Path $bundledVendorDirectory $msiName
@@ -132,7 +133,7 @@ if (-not $couchDbRunning) {
         Write-Host 'Bundled CouchDB installer was not found. Downloading verified installer...'
         try {
             Invoke-WebRequest -UseBasicParsing -Uri "${downloadRoot}/${msiName}" -OutFile $msiPath
-            Invoke-WebRequest -UseBasicParsing -Uri "${downloadRoot}/${msiName}.sha256" -OutFile $hashPath
+            Invoke-WebRequest -UseBasicParsing -Uri "${checksumRoot}/${msiName}.sha256" -OutFile $hashPath
         }
         catch {
             throw 'CouchDB is not bundled with this copy of RunCDX and the installer could not be downloaded. Use the full RunCDX Windows installer or connect this computer to the internet and try again.'
