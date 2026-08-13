@@ -33,7 +33,9 @@ it('creates an appointment when typed patient search has exactly one match', asy
   } as Patient
 
   jest.spyOn(PatientRepository, 'search').mockResolvedValue([patient])
-  jest.spyOn(AppointmentRepository, 'save').mockResolvedValue({ id: 'appointment-1' } as Appointment)
+  jest
+    .spyOn(AppointmentRepository, 'save')
+    .mockResolvedValue({ id: 'appointment-1' } as Appointment)
 
   const history = createMemoryHistory({ initialEntries: ['/appointments/new'] })
   render(
