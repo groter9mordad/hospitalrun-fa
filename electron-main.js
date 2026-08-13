@@ -26,12 +26,14 @@ const BUILD_DIR = path.join(__dirname, 'build')
 const BACKUP_FOLDER_NAME = 'RunCDX Backups'
 const BACKUP_RETENTION_COUNT = 30
 const SYNC_CONFIGURATION_FILE_NAME = 'sync-configuration.json'
+const RUNTIME_SMOKE_TEST_ARGUMENT = '--runcdx-runtime-smoke-test'
 
 protocol.registerSchemesAsPrivileged([
   {
     scheme: APP_SCHEME,
     privileges: {
       standard: true,
+      secure: true,
       supportFetchAPI: true,
       corsEnabled: true,
     },
@@ -357,7 +359,67 @@ function registerSyncConfigurationHandlers() {
   })
 }
 
+async function runRendererRuntimeSmokeTest(win) {
+  return win.webContents.executeJavaScript(`
+    (async () => {
+      if (!window.isSecureContext) {
+        throw new Error('RunCDX renderer is not a secure context')
+      }
+      if (!window.crypto || !window.crypto.subtle) {
+        throw new Error('Web Crypto SubtleCrypto is unavailable')
+      }
+
+      const salt = window.crypto.getRandomValues(new Uint8Array(16))
+      const key = await window.crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode('runcdx-runtime-smoke-password'),
+        'PBKDF2',
+        false,
+        ['deriveBits'],
+      )
+      const hash = await window.crypto.subtle.deriveBits(
+        { name: 'PBKDF2', hash: 'SHA-256', salt, iterations: 210000 },
+        key,
+        256,
+      )
+      if (hash.byteLength !== 32) {
+        throw new Error('PBKDF2 produced an unexpected result')
+      }
+
+      const databaseName = 'runcdx-runtime-smoke'
+      await new Promise((resolve, reject) => {
+        const request = window.indexedDB.open(databaseName, 1)
+        request.onupgradeneeded = () => {
+          const database = request.result
+          if (!database.objectStoreNames.contains('probe')) {
+            database.createObjectStore('probe')
+          }
+        }
+        request.onerror = () => reject(request.error || new Error('IndexedDB open failed'))
+        request.onsuccess = () => {
+          const database = request.result
+          const transaction = database.transaction('probe', 'readwrite')
+          transaction.objectStore('probe').put('ok', 'status')
+          transaction.onerror = () => {
+            database.close()
+            reject(transaction.error || new Error('IndexedDB write failed'))
+          }
+          transaction.oncomplete = () => {
+            database.close()
+            const deletion = window.indexedDB.deleteDatabase(databaseName)
+            deletion.onerror = () => reject(deletion.error || new Error('IndexedDB cleanup failed'))
+            deletion.onsuccess = () => resolve()
+          }
+        }
+      })
+
+      return 'ok'
+    })()
+  `)
+}
+
 function createWindow() {
+  const runtimeSmokeTest = process.argv.includes(RUNTIME_SMOKE_TEST_ARGUMENT)
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -380,7 +442,29 @@ function createWindow() {
       event.preventDefault()
     }
   })
-  win.once('ready-to-show', () => win.show())
+
+  if (runtimeSmokeTest) {
+    win.webContents.once('did-finish-load', async () => {
+      try {
+        const result = await runRendererRuntimeSmokeTest(win)
+        if (result !== 'ok') {
+          throw new Error('RunCDX runtime smoke test returned an unexpected result')
+        }
+        console.log('RunCDX runtime smoke test passed.')
+        app.exit(0)
+      } catch (error) {
+        console.error('RunCDX runtime smoke test failed.', error)
+        app.exit(1)
+      }
+    })
+    win.webContents.once('did-fail-load', (event, errorCode, errorDescription) => {
+      console.error(`RunCDX runtime smoke test could not load the renderer: ${errorCode} ${errorDescription}`)
+      app.exit(1)
+    })
+  } else {
+    win.once('ready-to-show', () => win.show())
+  }
+
   win.loadURL(`${APP_SCHEME}://${APP_HOST}/`)
 }
 
