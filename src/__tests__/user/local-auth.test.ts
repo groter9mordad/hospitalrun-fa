@@ -1,14 +1,13 @@
-import { webcrypto } from 'crypto'
-
 import { clinicalDb } from '../../shared/config/pouchdb'
 import { UserRole } from '../../shared/model/UserRole'
-import { getAdministratorSetupErrorMessage } from '../../user/SetupAdministrator'
 import {
   authenticateLocalUser,
   createLocalUser,
   hasLocalUsers,
   listLocalUsers,
 } from '../../user/local-auth'
+import { getAdministratorSetupErrorMessage } from '../../user/SetupAdministrator'
+import { webcrypto } from 'crypto'
 
 const originalCrypto = window.crypto
 
@@ -61,7 +60,11 @@ describe('local authentication', () => {
     expect(administrator.role).toBe(UserRole.Administrator)
     expect(await hasLocalUsers()).toBe(true)
     expect(await listLocalUsers()).toEqual([
-      expect.objectContaining({ username: 'drghorbani', role: UserRole.Administrator, active: true }),
+      expect.objectContaining({
+        username: 'drghorbani',
+        role: UserRole.Administrator,
+        active: true,
+      }),
     ])
 
     const authenticated = await authenticateLocalUser('DRGHORBANI', 'strong-password')
@@ -95,7 +98,9 @@ describe('local authentication', () => {
   })
 
   it('does not disguise internal failures as duplicate usernames', () => {
-    expect(getAdministratorSetupErrorMessage(new Error('USERNAME_EXISTS'))).toContain('قبلاً ثبت شده')
+    expect(getAdministratorSetupErrorMessage(new Error('USERNAME_EXISTS'))).toContain(
+      'قبلاً ثبت شده',
+    )
     expect(getAdministratorSetupErrorMessage(new Error('CRYPTO_UNAVAILABLE'))).toContain(
       'خطای داخلی RunCDX',
     )
