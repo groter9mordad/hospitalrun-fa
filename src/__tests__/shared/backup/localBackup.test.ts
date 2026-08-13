@@ -14,14 +14,18 @@ const installDesktopBridge = (overrides: Record<string, jest.Mock> = {}) => {
     openLocation: jest.fn().mockResolvedValue(''),
     ...overrides,
   }
+  const sync = {
+    getConfiguration: jest.fn().mockResolvedValue({
+      mode: 'standalone',
+      databaseName: 'hospitalrun',
+    }),
+    saveConfiguration: jest.fn(),
+  }
   ;(window as any).runcdxDesktop = {
     backup,
-    sync: {
-      getConfiguration: jest.fn(),
-      saveConfiguration: jest.fn(),
-    },
+    sync,
   }
-  return backup
+  return { backup, sync }
 }
 
 describe('local plaintext backup and restore', () => {
@@ -31,7 +35,7 @@ describe('local plaintext backup and restore', () => {
   })
 
   it('writes a readable JSON backup containing all local documents', async () => {
-    const bridge = installDesktopBridge()
+    const { backup: bridge } = installDesktopBridge()
     jest.spyOn(clinicalDb, 'allDocs').mockResolvedValue({
       rows: [
         {
@@ -61,7 +65,7 @@ describe('local plaintext backup and restore', () => {
     expect(bridge.save.mock.calls[0][0]).toContain('علی')
   })
 
-  it('makes a safety backup and then exactly replaces local documents', async () => {
+  it('makes a safety backup, exactly restores documents, and resumes configured sync', async () => {
     const selectedBackup = JSON.stringify({
       format: 'runcdx-json-backup',
       version: 1,
@@ -72,7 +76,7 @@ describe('local plaintext backup and restore', () => {
         { _id: 'patient_2_2', name: 'بیمار بازیابی‌شده' },
       ],
     })
-    const bridge = installDesktopBridge({
+    const { backup: bridge, sync } = installDesktopBridge({
       select: jest.fn().mockResolvedValue({ path: 'D:\\backup.json', contents: selectedBackup }),
     })
     jest
@@ -111,6 +115,7 @@ describe('local plaintext backup and restore', () => {
     })
 
     expect(bridge.save).toHaveBeenCalledTimes(1)
+    expect(sync.getConfiguration).toHaveBeenCalledTimes(1)
     expect(bulkDocs).toHaveBeenCalledWith([
       { _id: 'patient_2_1', _rev: '3-current', name: 'نسخه بکاپ' },
       { _id: 'patient_2_2', name: 'بیمار بازیابی‌شده' },
@@ -119,7 +124,7 @@ describe('local plaintext backup and restore', () => {
   })
 
   it('rejects an unrelated JSON file before changing clinical data', async () => {
-    const bridge = installDesktopBridge({
+    const { backup: bridge } = installDesktopBridge({
       select: jest.fn().mockResolvedValue({
         path: 'D:\\not-a-backup.json',
         contents: JSON.stringify({ documents: [] }),

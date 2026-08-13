@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import { clinicalDb, stopDatabaseSync } from '../config/pouchdb'
+import { clinicalDb, configureDatabaseSync, stopDatabaseSync } from '../config/pouchdb'
+import { loadSyncConfiguration } from '../config/syncConfiguration'
 
 const LAST_BACKUP_KEY = 'runcdx:last-local-backup'
 const BACKUP_INTERVAL_MS = 24 * 60 * 60 * 1000
@@ -74,35 +75,43 @@ export const restoreLocalBackup = async () => {
     return undefined
   }
   const backup = parseBackup(selected.contents)
+  const syncConfiguration = await loadSyncConfiguration()
 
   // Never replace clinical data without first preserving the current state.
   await createLocalBackup()
   stopDatabaseSync()
 
-  const current = await clinicalDb.allDocs({ include_docs: true })
-  const currentDocuments = current.rows
-    .map((row) => row.doc as Record<string, any> | undefined)
-    .filter((document): document is Record<string, any> => Boolean(document))
-  const currentById = new Map(currentDocuments.map((document) => [document._id, document]))
-  const backupIds = new Set(backup.documents.map((document) => document._id))
+  try {
+    const current = await clinicalDb.allDocs({ include_docs: true })
+    const currentDocuments = current.rows
+      .map((row) => row.doc as Record<string, any> | undefined)
+      .filter((document): document is Record<string, any> => Boolean(document))
+    const currentById = new Map(currentDocuments.map((document) => [document._id, document]))
+    const backupIds = new Set(backup.documents.map((document) => document._id))
 
-  const restoredDocuments = backup.documents.map((backupDocument) => {
-    const contents = { ...backupDocument }
-    delete contents._rev
-    delete contents._conflicts
-    const currentDocument = currentById.get(backupDocument._id)
-    return currentDocument?._rev ? { ...contents, _rev: currentDocument._rev } : contents
-  })
-  const deletedDocuments = currentDocuments
-    .filter((document) => !backupIds.has(document._id))
-    .map((document) => ({ _id: document._id, _rev: document._rev, _deleted: true }))
+    const restoredDocuments = backup.documents.map((backupDocument) => {
+      const contents = { ...backupDocument }
+      delete contents._rev
+      delete contents._conflicts
+      const currentDocument = currentById.get(backupDocument._id)
+      return currentDocument?._rev ? { ...contents, _rev: currentDocument._rev } : contents
+    })
+    const deletedDocuments = currentDocuments
+      .filter((document) => !backupIds.has(document._id))
+      .map((document) => ({ _id: document._id, _rev: document._rev, _deleted: true }))
 
-  const results = await clinicalDb.bulkDocs([...restoredDocuments, ...deletedDocuments] as any)
-  const failed = results.filter((result: any) => result.error)
-  if (failed.length) {
-    throw new Error('RUNCDX_BACKUP_RESTORE_FAILED')
+    const results = await clinicalDb.bulkDocs([...restoredDocuments, ...deletedDocuments] as any)
+    const failed = results.filter((result: any) => result.error)
+    if (failed.length) {
+      throw new Error('RUNCDX_BACKUP_RESTORE_FAILED')
+    }
+    return { path: selected.path, restoredDocuments: backup.documents.length }
+  } finally {
+    // Restore temporarily suspends replication so that the dataset is replaced
+    // atomically from the user's perspective. Always resume the configured LAN
+    // sync afterwards, even if the restore itself reports an error.
+    configureDatabaseSync(syncConfiguration).catch(() => undefined)
   }
-  return { path: selected.path, restoredDocuments: backup.documents.length }
 }
 
 const createBackupIfDue = () => {

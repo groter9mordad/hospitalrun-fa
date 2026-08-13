@@ -10,8 +10,8 @@ import {
 PouchDB.plugin(require('pouchdb-adapter-memory'))
 
 describe('offline database conflict resolution', () => {
-  it('merges independent patient fields and nested clinical lists', () => {
-    const merged = mergeConflictingDocuments([
+  it('selects one complete revision instead of synthesizing a clinical record', () => {
+    const resolved = mergeConflictingDocuments([
       {
         _id: 'patient_2_123',
         _rev: '2-winner',
@@ -34,12 +34,14 @@ describe('offline database conflict resolution', () => {
       },
     ] as any)
 
-    expect(merged._rev).toBe('2-winner')
-    expect(merged.data.familyName).toBe('احمدی')
-    expect(merged.data.diagnoses).toEqual([{ id: 'diagnosis-1', name: 'فشار خون' }])
+    expect(resolved._rev).toBe('2-winner')
+    expect(resolved.data.familyName).toBe('احمدی')
+    // The diagnosis belongs to a different concurrent revision. It must be
+    // retained in the audit, not silently combined into a synthetic patient.
+    expect(resolved.data.diagnoses).toEqual([])
   })
 
-  it('keeps offline changes and creates an audit record when clients reconnect', async () => {
+  it('keeps the latest whole edit and audits every original revision after reconnect', async () => {
     const server = new PouchDB('conflict-server', { adapter: 'memory' })
     const reception = new PouchDB('conflict-reception', { adapter: 'memory' })
     const doctor = new PouchDB('conflict-doctor', { adapter: 'memory' })
@@ -82,7 +84,7 @@ describe('offline database conflict resolution', () => {
       expect(await resolveDatabaseConflicts(reception)).toBe(1)
       const resolved = (await reception.get('patient_2_123')) as any
       expect(resolved.data.familyName).toBe('احمدی')
-      expect(resolved.data.diagnoses).toEqual([{ id: 'diagnosis-1', name: 'فشار خون' }])
+      expect(resolved.data.diagnoses).toEqual([])
 
       const auditRecords = await reception.allDocs({
         startkey: 'runcdx-conflict-audit:',
@@ -90,6 +92,14 @@ describe('offline database conflict resolution', () => {
         include_docs: true,
       })
       expect(auditRecords.rows).toHaveLength(1)
+      const audit = auditRecords.rows[0].doc as any
+      expect(audit.resolutionMode).toBe('latest-whole-document')
+      expect(audit.versions).toHaveLength(2)
+      expect(
+        audit.versions.some(
+          (version: any) => version.contents.data.diagnoses?.[0]?.name === 'فشار خون',
+        ),
+      ).toBe(true)
     } finally {
       await Promise.all([server.destroy(), reception.destroy(), doctor.destroy()])
     }

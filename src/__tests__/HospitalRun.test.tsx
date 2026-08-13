@@ -13,15 +13,20 @@ import IncidentRepository from '../shared/db/IncidentRepository'
 import LabRepository from '../shared/db/LabRepository'
 import MedicationRepository from '../shared/db/MedicationRepository'
 import Permissions from '../shared/model/Permissions'
+import { UserRole } from '../shared/model/UserRole'
 import { RootState } from '../shared/store'
 
 const { TitleProvider } = titleUtil
 const mockStore = createMockStore<RootState, any>([thunk])
 
 describe('HospitalRun', () => {
-  const setup = (route: string, permissions: Permissions[] = []) => {
+  const setup = (
+    route: string,
+    permissions: Permissions[] = [],
+    role: UserRole | undefined = undefined,
+  ) => {
     const store = mockStore({
-      user: { user: { id: '123' }, permissions },
+      user: { user: { id: '123' }, permissions, role },
       appointments: { appointments: [] },
       medications: { medications: [] },
       labs: { labs: [] },
@@ -148,10 +153,17 @@ describe('HospitalRun', () => {
     })
 
     describe('/settings', () => {
-      it('should render the Settings component when /settings is accessed', () => {
-        setup('/settings')
+      it('should render the Settings component for an administrator', () => {
+        setup('/settings', [], UserRole.Administrator)
 
         expect(screen.getByText(/settings.language.label/i)).toBeInTheDocument()
+      })
+
+      it('should render the dashboard for a non-administrator', () => {
+        setup('/settings', [], UserRole.Doctor)
+
+        expect(screen.getByRole('heading', { name: /dashboard/i })).toBeInTheDocument()
+        expect(window.location.pathname).toBe('/')
       })
     })
   })

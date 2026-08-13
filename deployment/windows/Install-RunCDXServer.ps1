@@ -102,7 +102,11 @@ $msiName = "apache-couchdb-${CouchDbVersion}.msi"
 $msiPath = Join-Path $workDirectory $msiName
 $hashPath = "${msiPath}.sha256"
 $downloadRoot = "https://couchdb.neighbourhood.ie/downloads/${CouchDbVersion}/win"
+$checksumRoot = "https://neighbourhood.ie/download-apache-couchdb/${CouchDbVersion}/win"
 $logPath = Join-Path $workDirectory 'couchdb-install.log'
+$bundledVendorDirectory = Join-Path $PSScriptRoot 'vendor'
+$bundledMsiPath = Join-Path $bundledVendorDirectory $msiName
+$bundledHashPath = "${bundledMsiPath}.sha256"
 
 New-Item -ItemType Directory -Force -Path $workDirectory, $configurationDirectory | Out-Null
 
@@ -120,9 +124,21 @@ if ($couchDbRunning -and -not (Test-Path $adminSecretPath) -and -not $PSBoundPar
 }
 
 if (-not $couchDbRunning) {
-    Write-Host 'Downloading verified Apache CouchDB installer...'
-    Invoke-WebRequest -UseBasicParsing -Uri "${downloadRoot}/${msiName}" -OutFile $msiPath
-    Invoke-WebRequest -UseBasicParsing -Uri "${downloadRoot}/${msiName}.sha256" -OutFile $hashPath
+    if ((Test-Path $bundledMsiPath) -and (Test-Path $bundledHashPath)) {
+        Write-Host 'Using bundled Apache CouchDB installer for offline setup...'
+        Copy-Item -Force $bundledMsiPath $msiPath
+        Copy-Item -Force $bundledHashPath $hashPath
+    }
+    else {
+        Write-Host 'Bundled CouchDB installer was not found. Downloading verified installer...'
+        try {
+            Invoke-WebRequest -UseBasicParsing -Uri "${downloadRoot}/${msiName}" -OutFile $msiPath
+            Invoke-WebRequest -UseBasicParsing -Uri "${checksumRoot}/${msiName}.sha256" -OutFile $hashPath
+        }
+        catch {
+            throw 'CouchDB is not bundled with this copy of RunCDX and the installer could not be downloaded. Use the full RunCDX Windows installer or connect this computer to the internet and try again.'
+        }
+    }
 
     $expectedHash = ((Get-Content -Raw $hashPath) -split '\s+')[0].Trim().ToUpperInvariant()
     $actualHash = (Get-FileHash -Algorithm SHA256 $msiPath).Hash.ToUpperInvariant()
