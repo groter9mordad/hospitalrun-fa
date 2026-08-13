@@ -54,99 +54,91 @@ const HospitalRun = () => {
   const role = useSelector((state: RootState) => state.user.role)
 
   return (
-    <div>
+    <div
+      className={`runcdx-app-shell ${sidebarCollapsed ? 'runcdx-sidebar-collapsed' : ''}`}
+      data-testid="runcdx-app-shell"
+    >
       <NetworkStatusMessage />
       <Navbar />
-      <div className="container-fluid">
-        <div className="col-md-2">
-          <Sidebar />
-        </div>
-        <ButtonBarProvider>
-          <div className="row">
-            <main
-              role="main"
-              className={`${
-                sidebarCollapsed ? 'col-md-10 col-lg-11' : 'col-md-9 col-lg-10'
-              } ml-sm-auto px-4`}
-            >
-              <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 className="h2">{title}</h1>
-                <ButtonToolBar />
-              </div>
-              <Breadcrumbs />
-              <div>
-                <Switch>
-                  <Route exact path="/" component={Dashboard} />
-                  <PermissionRoute
-                    path="/appointments"
-                    component={Appointments}
-                    userPermissions={userPermissions}
-                    permissions={[
-                      Permissions.ReadAppointments,
-                      Permissions.WriteAppointments,
-                      Permissions.DeleteAppointment,
-                    ]}
-                  />
-                  <PermissionRoute
-                    path="/patients"
-                    component={Patients}
-                    userPermissions={userPermissions}
-                    permissions={[Permissions.ReadPatients, Permissions.WritePatients]}
-                  />
-                  <PermissionRoute
-                    path="/labs"
-                    component={Labs}
-                    userPermissions={userPermissions}
-                    permissions={[
-                      Permissions.ViewLabs,
-                      Permissions.ViewLab,
-                      Permissions.RequestLab,
-                      Permissions.CompleteLab,
-                      Permissions.CancelLab,
-                    ]}
-                  />
-                  <PermissionRoute
-                    path="/medications"
-                    component={Medications}
-                    userPermissions={userPermissions}
-                    permissions={[
-                      Permissions.ViewMedications,
-                      Permissions.ViewMedication,
-                      Permissions.RequestMedication,
-                      Permissions.CompleteMedication,
-                      Permissions.CancelMedication,
-                    ]}
-                  />
-                  <PermissionRoute
-                    path="/incidents"
-                    component={Incidents}
-                    userPermissions={userPermissions}
-                    permissions={[
-                      Permissions.ViewIncidents,
-                      Permissions.ReportIncident,
-                      Permissions.ViewIncidentWidgets,
-                    ]}
-                  />
-                  <Route
-                    path="/settings"
-                    render={() =>
-                      role === UserRole.Administrator ? <Settings /> : <Redirect to="/" />
-                    }
-                  />
-                  <PermissionRoute
-                    path="/imaging"
-                    component={Imagings}
-                    userPermissions={userPermissions}
-                    permissions={[Permissions.ViewImagings, Permissions.RequestImaging]}
-                  />
-                  <Redirect to="/" />
-                </Switch>
-              </div>
-              <Toaster autoClose={5000} hideProgressBar draggable />
-            </main>
+      <Sidebar />
+      <ButtonBarProvider>
+        <main className="runcdx-main px-4" data-testid="runcdx-main" role="main">
+          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom runcdx-page-header">
+            <h1 className="h2">{title}</h1>
+            <ButtonToolBar />
           </div>
-        </ButtonBarProvider>
-      </div>
+          <Breadcrumbs />
+          <div className="runcdx-page-content">
+            <Switch>
+              <Route exact path="/" component={Dashboard} />
+              <PermissionRoute
+                path="/appointments"
+                component={Appointments}
+                userPermissions={userPermissions}
+                permissions={[
+                  Permissions.ReadAppointments,
+                  Permissions.WriteAppointments,
+                  Permissions.DeleteAppointment,
+                ]}
+              />
+              <PermissionRoute
+                path="/patients"
+                component={Patients}
+                userPermissions={userPermissions}
+                permissions={[Permissions.ReadPatients, Permissions.WritePatients]}
+              />
+              <PermissionRoute
+                path="/labs"
+                component={Labs}
+                userPermissions={userPermissions}
+                permissions={[
+                  Permissions.ViewLabs,
+                  Permissions.ViewLab,
+                  Permissions.RequestLab,
+                  Permissions.CompleteLab,
+                  Permissions.CancelLab,
+                ]}
+              />
+              <PermissionRoute
+                path="/medications"
+                component={Medications}
+                userPermissions={userPermissions}
+                permissions={[
+                  Permissions.ViewMedications,
+                  Permissions.ViewMedication,
+                  Permissions.RequestMedication,
+                  Permissions.CompleteMedication,
+                  Permissions.CancelMedication,
+                ]}
+              />
+              <PermissionRoute
+                path="/incidents"
+                component={Incidents}
+                userPermissions={userPermissions}
+                permissions={[
+                  Permissions.ViewIncidents,
+                  Permissions.ReportIncident,
+                  Permissions.ViewIncidentWidgets,
+                ]}
+              />
+              <Route
+                path="/settings"
+                render={() =>
+                  role === UserRole.Administrator ? <Settings /> : <Redirect to="/" />
+                }
+              />
+              <PermissionRoute
+                path="/imaging"
+                component={Imagings}
+                userPermissions={userPermissions}
+                permissions={[Permissions.ViewImagings, Permissions.RequestImaging]}
+              />
+              <Redirect to="/" />
+            </Switch>
+          </div>
+          <Toaster autoClose={5000} hideProgressBar draggable />
+        </main>
+      </ButtonBarProvider>
     </div>
   )
 }
